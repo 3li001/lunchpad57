@@ -1,0 +1,78 @@
+CREATE SCHEMA public;
+SET SEARCH_PATH TO public;
+
+CREATE TABLE IF NOT EXISTS Users(
+userID SERIAL PRIMARY KEY,
+userName VARCHAR(64) NOT NULL,
+email VARCHAR(64) NOT NULL CHECK(email LIKE '%@%.%'),
+passHash VARCHAR(98) NOT NULL,
+salt VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Vehicles(
+vehicleID SERIAL PRIMARY KEY,
+vehicleModel VARCHAR(32) NOT NULL,
+vehicleMake VARCHAR(32) NOT NULL,
+vehicleYear integer NOT NULL,
+mpg integer NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Drivers(
+driverID SERIAL PRIMARY KEY,
+userID integer references Users (userID) ON DELETE CASCADE,
+vehicleID integer references Vehicles (vehicleID) ON DELETE CASCADE,
+numberplate VARCHAR(7) NOT NULL,
+CompletedRides integer DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS VerifiedPlaces(
+placeID SERIAL PRIMARY KEY,
+placeName VarChar(32) NOT NULL,
+latitude decimal NOT NULL,
+longitude decimal NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS DriverCommutes(
+driverCommuteID SERIAL PRIMARY KEY,
+driverID integer references Drivers (driverID) ON DELETE CASCADE,
+startID integer references VerifiedPlaces (placeID) ON DELETE CASCADE,
+endID integer references VerifiedPlaces (placeID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS DriverCommuteDays(
+dateID SERIAL PRIMARY KEY,
+driverCommuteID integer references DriverCommutes (driverCommuteID) ON DELETE CASCADE,
+dateOccuring date NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS PassengerCommutes(
+passengerCommuteID SERIAL PRIMARY KEY,
+startID integer references VerifiedPlaces (placeID) ON DELETE CASCADE,
+endID integer references VerifiedPlaces (placeID) ON DELETE CASCADE,
+userID integer references Users (userID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS PassengerCommuteDays(
+dateID SERIAL PRIMARY KEY,
+passengerCommuteID integer references PassengerCommutes (passengerCommuteID) ON DELETE CASCADE,
+dateOccuring date NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Rides(
+rideID SERIAL PRIMARY KEY,
+dateOfRide date NOT NULL,
+driverID integer references Drivers (driverID) ON DELETE CASCADE,
+passengerID integer references Users (userID) ON DELETE CASCADE,
+pickupID integer references VerifiedPlaces (placeID) ON DELETE CASCADE,
+dropoffID integer references VerifiedPlaces (placeID) ON DELETE CASCADE,
+distance integer NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS CompletedRides(
+rideID SERIAL PRIMARY KEY,
+dateOfRide date NOT NULL,-- references Rides (dateOfRide),
+price integer NOT NULL,
+statusOfRide boolean DEFAULT FALSE NOT NULL,
+paid boolean DEFAULT FALSE NOT NULL
+)
+

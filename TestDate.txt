@@ -1,0 +1,31 @@
+INSERT INTO Users (username, email, passhash, salt)
+VALUES ('JohnSmith1', 'jsmith@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'Lu9nDJrmMIGfwBSTt4SLvck4xD4v9uEy'),
+('JaneDoe1', 'jdoe@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'MQryPqiSQUbteXsMMrI0zMraY8ysBRuR'),
+('SamBrown1', 'sbrown@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'Lu9nDJrmMIGfwBSTt4SLvck4xD4v9uEy'),
+('LucyGreen1', 'lgreen@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'MQryPqiSQUbteXsMMrI0zMraY8ysBRuR'),
+('BobMartin1', 'bmartin@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'Lu9nDJrmMIGfwBSTt4SLvck4xD4v9uEy'),
+('DavidLee1', 'dlee@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$Ude+inZkbQfQ4YdqVYfTmw$ZYQwE8VrOERsCjQtQ/RQ2w+2XCssuaKlcc6kfdJE4og', 'MQryPqiSQUbteXsMMrI0zMraY8ysBRuR');
+
+
+INSERT INTO Vehicles (vehicleModel,vehicleMake, vehicleYear, mpg)
+VALUES ('Toyota', 'Yarris', 2012, 50),
+('Volkswagon', 'Golf', 2016, 50);
+
+INSERT INTO Drivers (userID, vehicleID, numberplate)
+VALUES (1, 1, 'C4H12GF'),
+(2, 1, 'AAAAAAA'),
+(3,2,'CARCAR1');
+
+INSERT INTO VerifiedPlaces (placename, Latitude, Longitude)
+VALUES ('Brindley Place',52.47829641715516, -1.9137569036558184),
+('Crescent Theatre',52.47724693689322, -1.9154152566545128),
+('Barbara's Bier Haus Birmingham',52.475063731202475, -1.9143447322504519),
+('Snell Park',52.48045775459764, -1.9173488995393466);
+
+INSERT INTO DriverCommutes(driverID, startID, endID)
+VALUES (1,2,4),(2,1,3),(3,3,2);
+
+INSERT INTO DriverCommuteDays(driverCommuteID,dateOccuring)
+VALUES (1, '2026-07-03'),(1, '2026-07-04'),(1, '2026-07-05'),
+(2, '2026-06-13'), (2, '2026-06-15'),
+(3, '2026-08-03'); 
