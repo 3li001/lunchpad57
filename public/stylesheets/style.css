@@ -21,6 +21,10 @@
     --radius-md: 8px;
     --radius-lg: 12px;
 
+    /* --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px; */
+
     --transition-fast: 120ms ease;
     --transition-base: 200ms ease;
 
@@ -509,7 +513,7 @@ footer {
     position: fixed;
     inset: 0;
     background: rgba(var(--col-secondary-rgb), 0.45);
-    z-index: 100;
+    z-index: 1000;
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-base);
@@ -532,7 +536,7 @@ footer {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
-    z-index: 101;
+    z-index: 1001;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1170,6 +1174,7 @@ main:has(#RideLayout) {
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    position: relative;
 
     /* margin: 1em; */
     /* gap: 1em; */
@@ -1188,14 +1193,23 @@ main:has(#RideLayout) {
 
 #RidePanel {
     width: 380px;
+    margin: 2.5em 1em;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    position: absolute;
     overflow: hidden;
     /* background-color: rgb(22, 28, 58); */
     background-color: var(--col-primary);
     color: var(--col-txt-primary);
-    z-index: 2;
+    z-index: 999;
+
+    right: 0;
+    top: 0;
+    height: calc(100% - 5em);
+
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 /* Route badge header */
@@ -1599,13 +1613,28 @@ main:has(#RideLayout) {
     }
 
     #RideMap {
-        height: 280px;
+        /* height: 280px; */
+        height: 100%;
         flex: none;
     }
 
     #RidePanel {
+        /* width: calc(100% - 2em); */
         width: 100%;
         flex: 1;
+        /* margin: 1em; */
+        margin: 0;
+        height: 50%;
+        bottom: 0;
+        position: absolute;
+        /* position: unset; */
+        /* top: calc(50% - 2em); */
+        top: 50%;
+    }
+
+    #RideStops {
+        flex-shrink: 0 !important;
+        overflow-y: unset !important;
     }
 }
 
@@ -1613,7 +1642,7 @@ main:has(#RideLayout) {
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-height: 0;
+    /* min-height: 0; */
     overflow: hidden;
 }
 
@@ -1787,7 +1816,7 @@ main:has(#RideLayout) {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 #RideDetailBar {
@@ -1918,7 +1947,7 @@ main:has(#RideLayout) {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    /* min-height: 0; */
 }
 
 .stop-badge-end {
@@ -1930,6 +1959,17 @@ main:has(#RideLayout) {
     border-top: 1px solid rgba(var(--col-secondary-rgb), 0.2);
     flex-shrink: 0;
     background: rgba(var(--col-secondary-rgb), 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+#RegisterPickup,
+#RegisterDropoff {
+    width: 100%;
+    font-size: 1em;
+    padding: 0.5em;
+    border-radius: var(--radius-sm)
 }
 
 #RegisterBtn {

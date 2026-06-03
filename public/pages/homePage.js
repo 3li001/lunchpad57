@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         referrerPolicy: "origin"
     }).addTo(map);
 
-    L.control.zoom({ position: "topright" }).addTo(map);
+    L.control.zoom({ position: "topleft" }).addTo(map);
 
     let routeLayers = [];
     let selectedRide = null;
