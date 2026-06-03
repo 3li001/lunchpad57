@@ -1,0 +1,53 @@
+doctype html
+html(lang="en")
+    head
+        title= title
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/stylesheets/style.css")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css")
+        script(src="/pages/loginPage.js")
+        script(src="/scripts/toastNotify.js")
+    body
+        nav#Nav
+            div#NavTitle
+                a(href="/") RideShare
+        div#LoginPanel.modal-panel.shadow
+            div.modal-tabs
+                button Login
+                button Register
+            div.modal-content
+                form#Login(style="display: none")
+                    div.form-input
+                        label(for="Email") Email 
+                        input(type="email", name="Email")
+                        label(for="Password") Password
+                        input(type="password", name="Password")
+                        a#Forgor(href="/forgot-password") Forgot password?
+                    div.form-actions
+                        input(type="submit", value="Login")
+                form#Register(style="display: none")
+                    div.form-input
+                        label(for="Name") Name
+                        input(type="text" name="Name")
+                        label(for="Email") Email 
+                        input(type="email", name="Email")
+                        label(for="Password") Password
+                        input(type="password", name="Password")
+                        label(for="ConfirmPassword") Confirm Password
+                        input(type="password", name="ConfirmPassword")
+                    div.form-actions
+                        input(type="submit", value="Register")
+                //added a new form instead of a pop up box for forgotten password email input - amro        
+                form#Forgot(style="display: none")
+                    div.form-input
+                        div(style="grid-column: 1 / -1; margin-bottom: 10px;")
+                            p.modal-text Enter your email to receive a verification code.
+                        label(for="Email") Email 
+                        input(type="email", name="Email" required placeholder="yourname@email.com")
+                    div.form-actions
+                        input(type="submit", value="Send Reset Code")
+                        a#BackToLogin(href="#" style="font-size: 0.8em; margin-left: 15px;") ← Back to Login
+        main
+    footer
+        p &copy; Launchpad Project | RideShare

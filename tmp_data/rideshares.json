@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "driver_name": "Mr Bean",
+        "start_location": "City Centre",
+        "end_location": "Norwich Airport",
+        "car_model": "1977 British Leyland Mini 1000",
+        "registration": "SLW 287R",
+        "start_time": "09:00",
+        "seats_available": 3,
+        "stops": [
+            { "name": "Norwich City Centre",   "coords": [52.628571,  1.2921  ], "time": "09:00" },
+            { "name": "Castle Meadow",         "coords": [52.629223,  1.295769], "time": "09:04" },
+            { "name": "Magdalen Street",       "coords": [52.634434,  1.296622], "time": "09:09" },
+            { "name": "Catton Grove Road",     "coords": [52.652886,  1.293011], "time": "09:16" },
+            { "name": "Hellesdon",             "coords": [52.664652,  1.26349 ], "time": "09:23" },
+            { "name": "Drayton Road",          "coords": [52.651739,  1.26192 ], "time": "09:30" },
+            { "name": "Norwich Airport",       "coords": [52.67646,   1.281816], "time": "09:45" }
+        ]
+    }
+]

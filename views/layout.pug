@@ -1,0 +1,105 @@
+mixin thumbToggle()
+    div.toggle
+        input(type="checkbox")
+        span.toggle-track
+        span.toggle-thumb
+
+mixin numRange()
+    div.range
+        button.range-dec
+            i.fa-solid.fa-chevron-left
+        span.range-val 0
+        button.range-inc
+            i.fa-solid.fa-chevron-right
+
+
+mixin accessibilityOption(id, label, tooltip)
+    div.accessibility-option(id= id style=`--tooltip: "${tooltip}"`)
+        p.label= label
+        div.control
+            block
+
+doctype html
+html(lang="en")
+    head
+        title= title
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/stylesheets/style.css")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css")
+        block head
+        script(src="/scripts/app.js")
+        script(src="/scripts/accessibility.js")
+        script(src="/scripts/toastNotify.js")
+        if scripts
+            each script in scripts
+                script(src = script defer)
+    body
+        nav#Nav
+            div#NavTitle
+                a(href="/") RideShare
+            div#NavItems
+                //- ...
+            div#NavAccessibility
+                button#AccessibilityBtn
+                    i.fa-solid.fa-cog.fa-xl
+                div#NavAccessibilityPanel
+                    +accessibilityOption("ACS_HIGH_CONTRAST", "High Contrast", "Toggle high contrast mode.")
+                        +thumbToggle()
+                    //- +accessibilityOption("ACS_FONT_SIZE", "Font Size", "Adjust the font size of the site.")
+                    //-     +numRange()
+                    div#TTSOptions
+                        h3 Text-to-Speech
+                        +accessibilityOption("ACS_TTS_SPEED", "Speed", "Adjust the speed of Text-to-Speech")
+                            +numRange()
+                        div#TTSControls
+                            button#TTSSelect Select Text
+                            button#TTSReadPage Read Page
+            //- div#NavAccount
+            //-     a#NavProfile
+            //-         i.fa-solid.fa-user.fa-xl
+            //-     div#NavAccountPanel(hidden)
+            //-         a(href="/account") Account
+            //-         //- a(href="/settings") Settings
+            //-         a(href="/auth/logout") Sign Out
+
+        //- nav#BurgerNavContainer
+        //-     div
+        //-         button#BurgerNavButton
+        //-             i.fa-solid.fa-bars.fa-xl
+        //-     div#BurgerNav
+        //-         a(href="/") Study Dashboard
+        //-         a(href="/modules") Modules
+        //-         a(href="/account") Account
+        //-         a(href="/auth/logout") Sign Out
+        //- div#Overlay(hidden)
+        //- div#LoginPanel.modal-panel.shadow(hidden)
+        //-     div.modal-tabs
+        //-         button Login
+        //-         button Register
+        //-     div.modal-content
+        //-         form#Login(style="display: none")
+        //-             div.form-input
+        //-                 label(for="Email") Email 
+        //-                 input(type="email", name="Email")
+        //-                 label(for="Password") Password
+        //-                 input(type="password", name="Password")
+        //-                 a#Forgor(href="/forgot-password") Forgot password?
+        //-             div.form-actions
+        //-                 input(type="submit", value="Login")
+        //-                 button.form-close Close
+        //-         form#Register(style="display: none")
+        //-             div.form-input
+        //-                 label(for="Email") Email 
+        //-                 input(type="email", name="Email")
+        //-                 label(for="Password") Password
+        //-                 input(type="password", name="Password")
+        //-                 label(for="ConfirmPassword") Confirm Password
+        //-                 input(type="password", name="ConfirmPassword")
+        //-             div.form-actions
+        //-                 input(type="submit", value="Register")
+        //-                 button.form-close Close
+        main
+            block content
+        footer
+            p &copy; Launchpad Project | RideShare
