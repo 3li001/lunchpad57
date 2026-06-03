@@ -17,5 +17,24 @@
             { "name": "Drayton Road",          "coords": [52.651739,  1.26192 ], "time": "09:30" },
             { "name": "Norwich Airport",       "coords": [52.67646,   1.281816], "time": "09:45" }
         ]
+    },
+    {
+        "id": 2,
+        "driver_name": "Jefferey",
+        "start_location": "Norwich Airport",
+        "end_location": "City Centre",
+        "car_model": "2020 Mercedes-Benz CLA",
+        "registration": "KP0 VRO",
+        "start_time": "19:00",
+        "seats_available": 4,
+        "stops": [
+            { "name": "Norwich Airport",       "coords": [52.67646,   1.281816], "time": "09:45" },
+            { "name": "Drayton Road",          "coords": [52.651739,  1.26192 ], "time": "09:30" },
+            { "name": "Hellesdon",             "coords": [52.664652,  1.26349 ], "time": "09:23" },
+            { "name": "Catton Grove Road",     "coords": [52.652886,  1.293011], "time": "09:16" },
+            { "name": "Magdalen Street",       "coords": [52.634434,  1.296622], "time": "09:09" },
+            { "name": "Castle Meadow",         "coords": [52.629223,  1.295769], "time": "09:04" },
+            { "name": "Norwich City Centre",   "coords": [52.628571,  1.2921  ], "time": "09:00" }
+        ]
     }
 ]
