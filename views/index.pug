@@ -81,14 +81,15 @@ block content
 
     script.
         const RIDESHARES = !{JSON.stringify(rideshares)};
-        const NORWICH_COORDS = [52.6309, 1.2974];
+        const LADYWOOD_COORDS = [52.482273, -1.90359];
 
         document.addEventListener("DOMContentLoaded", () => {
-            let map = L.map("RideMap", { zoomControl: false }).setView(NORWICH_COORDS, 12);
+            let map = L.map("RideMap", { zoomControl: false }).setView(LADYWOOD_COORDS, 12);
             
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
-                maxZoom: 19
+                maxZoom: 19,
+                referrerPolicy: "origin"
             }).addTo(map);
 
             L.control.zoom({ position: "topright" }).addTo(map);
@@ -206,7 +207,7 @@ block content
                 document.getElementById("RideList").style.display = "flex";
                 
                 clearMap();
-                map.setView(NORWICH_COORDS, 12);
+                map.setView(LADYWOOD_COORDS, 12);
             }
 
             const allCards = Array.from(document.querySelectorAll(".ride-card"));
