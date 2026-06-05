@@ -86,7 +86,7 @@ route.router.post("/forgot-password", async (req, res) => {
         await sendEmail(email, "Password Reset", `Your code: ${token}`);
         
         res.json({
-            message: "Check your email outbox for the code📧",
+            message: "Check your email outbox for the code",
             redirect: `/auth/reset-password?email=${encodeURIComponent(email)}`
         });
     } catch (error) {
