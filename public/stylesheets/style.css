@@ -1201,7 +1201,7 @@ main:has(#RideLayout) {
     position: absolute;
     overflow: hidden;
     /* background-color: rgb(22, 28, 58); */
-    background-color: var(--col-primary);
+    /* background-color: var(--col-primary); */
     color: var(--col-txt-primary);
     z-index: 999;
 
@@ -1209,8 +1209,8 @@ main:has(#RideLayout) {
     top: 0;
     height: calc(100% - 5em);
 
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
+    /* border-radius: var(--radius-md); */
+    /* box-shadow: var(--shadow-md); */
 }
 
 /* Route badge header */
@@ -1644,7 +1644,15 @@ main:has(#RideLayout) {
     flex-direction: column;
     flex: 1;
     /* min-height: 0; */
+    gap: 1em;
     overflow: hidden;
+
+    > * {
+        background: var(--col-primary);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(var(--col-secondary-rgb), 0.2);
+    }
 }
 
 #RideListHeader {
@@ -1675,8 +1683,10 @@ main:has(#RideLayout) {
     gap: 0.6em;
     padding: 0.65em 1.25em;
     border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.15);
-    background: rgba(var(--col-secondary-rgb), 0.06);
+    /* background: rgba(var(--col-secondary-rgb), 0.06); */
     flex-shrink: 0;
+    background: var(--col-primary);
+    border-radius: var(--radius-lg);
 
     & > .fa-magnifying-glass {
         flex-shrink: 0;
@@ -1726,7 +1736,9 @@ main:has(#RideLayout) {
 .ride-card-list {
     flex: 1;
     overflow-y: auto;
-    padding: 0.35em 0;
+    /* padding: 0.35em 0; */
+    background: var(--col-primary);
+    border-radius: var(--radius-lg);
 }
 
 .ride-card {
@@ -1817,7 +1829,11 @@ main:has(#RideLayout) {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
+    background: var(--col-primary);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(var(--col-secondary-rgb), 0.2);
+    box-shadow: var(--shadow-md);
 }
 
 #RideDetailBar {
@@ -1985,4 +2001,8 @@ main:has(#RideLayout) {
     &:hover {
         filter: brightness(1.08);
     }
+}
+
+#ActiveRide {
+    padding: 1em;
 }
