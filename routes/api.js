@@ -66,4 +66,46 @@ route.router.patch("/account/password", async (req, res) => {
     }
 })
 
+route.router.post("/driver/register", async (req, res) => {
+    const user_id = req.session.user_id
+    const { make, model, year, mpg, numberPlate } = req.body
+
+    if (!make || !model || !year || !mpg || !numberPlate) {
+        return res.status(400).json({ message: "All fields are required." })
+    }
+
+    const yearNum = parseInt(year)
+    const mpgNum = parseInt(mpg)
+    const currentYear = new Date().getFullYear()
+
+    if (isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear + 1) {
+        return res.status(400).json({ message: "Invalid vehicle year." })
+    }
+    if (isNaN(mpgNum) || mpgNum < 1 || mpgNum > 200) {
+        return res.status(400).json({ message: "Invalid MPG value." })
+    }
+
+    const plate = numberPlate.trim().toUpperCase()
+    if (!/^[A-Z0-9]{2,4} ?[A-Z0-9]{2,4}$/.test(plate)) {
+        return res.status(400).json({ message: "Invalid number plate format." })
+    }
+
+    try {
+        const db = getDatabase()
+        const existing = db.getDriverByUserId(user_id)
+        if (existing) {
+            return res.status(409).json({ message: "You are already registered as a driver." })
+        }
+
+        const vehicle_id = db.addVehicle(make, model, yearNum, mpgNum)
+        db.registerDriver(user_id, vehicle_id, plate)
+
+        res.status(201).json({ message: "Driver registered successfully!" })
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ message: "Something went wrong, please try again later." })
+    }
+})
+
 module.exports = route

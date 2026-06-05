@@ -744,7 +744,8 @@ footer {
 #Login,
 #Register,
 #ResetPasswordForm,
-#Forgot {
+#Forgot,
+#RegisterDriverForm {
     height: 100%;
     display: flex;
     flex-direction: column;
