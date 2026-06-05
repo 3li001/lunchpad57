@@ -47,9 +47,13 @@ block content
                         span No rideshares match your search.
                         
                 div#ActiveRide
-                    div#ActiveDriver Mr Bean
-                    div#ActivePickup Somewhere
-                    div#ActivePickupTime 9:00
+                    //- div#ActiveDriver
+                        //- p#ActiveDriverName Mr Bean
+                        //- p#ActiveDriverCar
+                        //-     span#ActiveDriverCarModel 1977 British Leyland Mini 1000
+                        //-     span#ActiveDriverCarReg SLW 287R
+                    p.detail-loc-label Pickup
+                    p#ActivePickup Somewhere in 3 mins (9:00)
 
             div#RideDetail(style="display:none")
                 div#RideDetailBar

@@ -9,4 +9,10 @@ route.router.get("/", async (req, res) => {
     });
 });
 
+route.router.post("/join-ride", async (req, res) => {
+    const user_id = req.session.user_id
+
+    
+})
+
 module.exports = route

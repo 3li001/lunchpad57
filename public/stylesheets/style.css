@@ -1091,73 +1091,6 @@ footer {
     display: none;
 }
 
-@media (max-width: 768px) {
-    html {
-        font-size: 110%;
-    }
-
-    #Nav {
-        display: none;
-    }
-
-    #BurgerNavContainer {
-        display: block;
-        width: 100%;
-        top: 0;
-        left: 0;
-        padding: 0.5em;
-        /* height: 1em; */
-        background-color: var(--col-primary);
-        anchor-name: --nav;
-
-        #BurgerNavButton {
-            float: right;
-            background-color: transparent !important;
-        }
-
-        #BurgerNav {
-            display: none;
-        }
-
-        #BurgerNav.open {
-            position: absolute;
-            position-anchor: --nav;
-            margin: 0;
-            top: anchor(bottom);
-            left: anchor(left);
-            background-color: var(--col-primary);
-            border: 1px solid rgba(var(--col-secondary-rgb), 0.12);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            z-index: 1;
-
-            > a {
-                padding: 0.75em 1.25em;
-                font-size: 0.9em;
-                font-weight: 500;
-                transition: background-color var(--transition-fast);
-
-                &:hover {
-                    background-color: var(--col-tertiary);
-                    color: var(--col-txt-tertiary);
-                    text-decoration: none;
-                }
-            }
-        }
-    }
-
-    /*
-        Login page
-    */
-
-    #LoginPanel {
-        width: 90%;
-    }
-}
-
 /*
     Rideshare / Map Layout
 */
@@ -1609,34 +1542,7 @@ main:has(#RideLayout) {
 
 /* Mobile */
 @media (max-width: 768px) {
-    #RideLayout {
-        flex-direction: column;
-    }
-
-    #RideMap {
-        /* height: 280px; */
-        height: 100%;
-        flex: none;
-    }
-
-    #RidePanel {
-        /* width: calc(100% - 2em); */
-        width: 100%;
-        flex: 1;
-        /* margin: 1em; */
-        margin: 0;
-        height: 50%;
-        bottom: 0;
-        position: absolute;
-        /* position: unset; */
-        /* top: calc(50% - 2em); */
-        top: 50%;
-    }
-
-    #RideStops {
-        flex-shrink: 0 !important;
-        overflow-y: unset !important;
-    }
+    
 }
 
 #RideList {
@@ -1840,7 +1746,7 @@ main:has(#RideLayout) {
     display: flex;
     align-items: center;
     gap: 0.75em;
-    padding: 0.85em 1.25em;
+    padding: 0.35em 0.8em;
     border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.2);
     background: rgba(var(--col-secondary-rgb), 0.04);
     flex-shrink: 0;
@@ -2005,4 +1911,152 @@ main:has(#RideLayout) {
 
 #ActiveRide {
     padding: 1em;
+
+    > #ActiveDriver {
+        border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.2);
+
+        > * {
+            margin: 0;
+        }
+
+        > #ActiveDriverName {
+            width: 100%;
+            font-size: large;
+        }
+
+        > #ActiveDriverCar {
+            > #ActiveDriverCarModel {
+                /* font-size: */
+                margin-right: 5px;
+            }
+
+            > #ActiveDriverCarReg {
+                /* font-size: small; */
+                font-weight: bold;
+            }
+        }
+    }
+
+    > .detail-loc-label {
+        margin: 0;
+        /* margin-top: 1em; */
+    }
+
+    > #ActivePickup {
+        margin: 0;
+        display: inline-block;
+        width: fit-content;
+    }
+    
+    > #ActivePickupTime {
+        margin: 0;
+        display: inline-block;
+    }
+}
+
+
+@media (max-width: 768px) {
+    html {
+        font-size: 110%;
+    }
+
+    #Nav {
+        display: none;
+    }
+
+    #BurgerNavContainer {
+        display: block;
+        width: 100%;
+        top: 0;
+        left: 0;
+        padding: 0.5em;
+        /* height: 1em; */
+        background-color: var(--col-primary);
+        anchor-name: --nav;
+
+        #BurgerNavButton {
+            float: right;
+            background-color: transparent !important;
+        }
+
+        #BurgerNav {
+            display: none;
+        }
+
+        #BurgerNav.open {
+            position: absolute;
+            position-anchor: --nav;
+            margin: 0;
+            top: anchor(bottom);
+            left: anchor(left);
+            background-color: var(--col-primary);
+            border: 1px solid rgba(var(--col-secondary-rgb), 0.12);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            z-index: 1;
+
+            > a {
+                padding: 0.75em 1.25em;
+                font-size: 0.9em;
+                font-weight: 500;
+                transition: background-color var(--transition-fast);
+
+                &:hover {
+                    background-color: var(--col-tertiary);
+                    color: var(--col-txt-tertiary);
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    /*
+        Login page
+    */
+
+    #LoginPanel {
+        width: 90%;
+    }
+
+    #RideList {
+        gap: 0 !important;
+
+        * {
+            box-shadow: none !important;
+            border-radius: 0px;
+        }
+    }
+
+    #RideLayout {
+        flex-direction: column;
+    }
+
+    #RideMap {
+        /* height: 280px; */
+        height: 100%;
+        flex: none;
+    }
+
+    #RidePanel {
+        /* width: calc(100% - 2em); */
+        width: 100%;
+        flex: 1;
+        /* margin: 1em; */
+        margin: 0;
+        height: 50%;
+        /* bottom: 3em; */
+        position: absolute;
+        /* position: unset; */
+        /* top: calc(50% - 2em); */
+        top: 50%;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    #RideStops {
+        flex-shrink: 0 !important;
+        overflow-y: unset !important;
+    }
 }
