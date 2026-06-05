@@ -1,9 +1,8 @@
 const path = require("node:path");
-
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const fs = require("node:fs");
 const { env } = require("node:process")
-
+const connect=require("./dbConnect");
 require("./node_modules/module-alias/register")
 
 const express = require("express");
@@ -16,7 +15,7 @@ const app = express();
 // Setup pug view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-
+app.use(requireDBConnection);
 /////////////////////
 // Data Middleware
 // This is all utility stuff that runs before any routes are called,
@@ -127,7 +126,31 @@ app.use((err, req, res, next) => {
     res.render("error");
 });
 
+function requireLoggedIn(req, res, next) {
+   if (!req.session?.user?.loggedIn) {
+    return res.redirect("/");
+  }
+  next();
+}
 
+function requireNotLoggedIn(req, res, next) {
+  if (req.session.user.loggedIn) {
+    return res.redirect("/home");
+  }
+  next();
+}
+
+function requireDBConnection(req, res, next) {
+  const status = connect.getStatus();
+  if (status.connected === null || !status.connected) {
+    return res.render("site/errorPage", {
+      objects: { buttons: [] },
+      errorMessage: connect.connectionError
+    });
+  }
+
+  next();
+}
 /////////////////////
 // This is where the site is started, there shouldn"t be
 // any modifications to `app` past this point.

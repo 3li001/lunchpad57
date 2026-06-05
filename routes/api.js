@@ -1,7 +1,7 @@
 const route = require("@lib/createRoute")("/api")
 const { getDatabase } = require("../lib/devDatabase")
 const bcrypt = require("bcryptjs")
-
+const connect=require("../dbConnect");
 // TODO: Move to separate API routes
 
 route.router.delete("/account", async (req, res) => {
