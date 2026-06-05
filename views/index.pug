@@ -10,9 +10,9 @@ block content
 
         div#RidePanel
             div#RideList
-                div#RideListHeader
-                    span.panel-section-title Available Rideshares
-                    span#RideListMeta.panel-section-meta #{rideshares.length} available
+                //- div#RideListHeader
+                //-     span.panel-section-title Available Rideshares
+                //-     span#RideListMeta.panel-section-meta #{rideshares.length} available
 
                 div#RideSearch
                     i.fa-solid.fa-magnifying-glass
@@ -45,6 +45,11 @@ block content
                     div#NoResults(hidden)
                         i.fa-solid.fa-circle-exclamation
                         span No rideshares match your search.
+                        
+                div#ActiveRide
+                    div#ActiveDriver Mr Bean
+                    div#ActivePickup Somewhere
+                    div#ActivePickupTime 9:00
 
             div#RideDetail(style="display:none")
                 div#RideDetailBar

@@ -87,12 +87,12 @@ for (const p of ["routes", "api"]) {
 
         // We need to register unprotected routes first so 
         // they don't hit the auth middleware
-        // if (exclude_auth === true ) {
+        if (exclude_auth === true ) {
             public_routes.push({ route_path, router })
-        // }
-        // else {
-            // auth_routes.push({ route_path, router })
-        // }
+        }
+        else {
+            auth_routes.push({ route_path, router })
+        }
     })
 }
 
