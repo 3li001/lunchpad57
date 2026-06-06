@@ -1,33 +1,41 @@
 const route = require("@lib/createRoute")("/auth")
 const { getDatabase } = require("../lib/devDatabase")
 const bcrypt = require("bcryptjs")
-
+const connect = require("../dbConnect.js");
 // Could maybe put together an auth config with this
 const SALT_ROUNDS = 10
 
 route.router.post("/register", async (req, res) => {
-    const { name, email, password } = req.body
-
+    const { name, email, password } = req.body;
     if (!name || !email || !password) {
-        return res.status(400).json({ message: "Missing fields." })
+        return res.status(400).json({
+            message: "Missing fields."
+        });
     }
-
     try {
-        const user = await getDatabase().getUserByEmail(email)
-        if (user) {
-            return res.status(409).json({ message: "Email in use." })
+        const exists = await connect.checkUserExists(name, email);
+
+        if (!exists.success) {
+            return res.status(409).json({
+                message: exists.message
+            });
         }
-
-        const pass_hash = await bcrypt.hash(password, SALT_ROUNDS)
-        await getDatabase().addUser(name, email, pass_hash)
-
-        res.status(201).json({ message: "Account created." })
+        const result = await connect.addUser(name, email, password);
+        if (!result.success) {
+            return res.status(500).json({
+                message: result.message
+            });
+        }
+        return res.status(201).json({
+            message: "Account created."
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "There was a problem creating your account."
+        });
     }
-    catch (error) {
-        console.error(error)
-        res.status(500).json({ message: "There was a problem creating your account, try again later." })
-    }
-})
+});
 
 route.router.post("/login", async (req, res) => {
     const { email, password } = req.body
@@ -37,15 +45,19 @@ route.router.post("/login", async (req, res) => {
     }
 
     try {
-        const user = await getDatabase().getUserByEmail(email)
+        let login = await connect.checkLoginInfo(email, password);
 
-        if (!user || !await bcrypt.compare(password, user.getPassword())) {
-            return res.status(401).json({ message: "Invalid email or password." })
-        }
-
-        req.session.user_id = user.getId()
+    console.log(login);
+    
+    // storing the users session info
+    if (login) {
+     req.session.user_id = connect.getUserID(email);
 
         res.json({ message: "Logged in!" })
+    }
+        
+
+        
     }
     catch (error) {
         console.error(error)

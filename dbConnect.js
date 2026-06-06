@@ -22,7 +22,7 @@ class Connect{
   async tryToConnect(attempts = 0, maxAttempts = 2) {
      
     try {
-      const db = new sqlite3.Database("./test.db");
+      this.db = new sqlite3.Database("./test.db");
       console.log("connected to DB");
       this.isConnected = true;
       //console.log(this.isConnected);
@@ -53,94 +53,141 @@ class Connect{
     };
   }
 
-  async addUser(name, email, password) {
-    try{
-      const illegalUnameChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*@#~?.,`\n]/;
-      const nameCheck = name.length < 3 || name.length > 32 || illegalUnameChars.test(name);
-      const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
-      const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
-      console.log(nameCheck, emailCheck);
-      if(nameCheck || emailCheck){
-        console.log("check failed");
-        return {success:false, message:"illegal characters entered"};
-      }
-    
-      const salt = await hash.saltGen();
-      const passHash = await hash.passwordHash(salt, password);
-      const queryText = "INSERT INTO Users (username, email, passHash, salt) VALUES ($1, $2, $3, $4, $5)";
-      await this.pool.query(
-        queryText,
-        [name, email, passHash, salt]
-      );
-      return {success:true, message:"User added"};
+ async addUser(name, email, password) {
+  try {
+    const illegalUnameChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*@#~?.,`\n]/;
+    const nameCheck = name.length < 3 || name.length > 32 || illegalUnameChars.test(name);
+    const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
+    const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
+
+    if (nameCheck || emailCheck) {
+      return { success: false, message: "illegal characters entered" };
     }
-    catch(err){
-      console.error("addUser failed:", err);
-      return {success:false, message:"failed to add user"};
-    };
+
+    const salt = await hash.saltGen();
+    const passHash = await hash.passwordHash(salt, password);
+
+  
+    const queryText = `INSERT INTO Users (username, email, passHash, salt) VALUES (?, ?, ?, ?)`;
+
+    //sqlite3 uses promises
+    await new Promise((resolve, reject) => {
+      this.db.run(queryText, [name, email, passHash, salt], function (err) {
+        if (err) return reject(err);
+        resolve(this); // `this` has lastID
+      });
+    });
+
+    return { success: true, message: "User added" };
+  } catch (err) {
+    console.error("addUser failed:", err);
+    return { success: false, message: "failed to add user" };
   }
+}
  
  
   
 
 
 
-  async getUsers(){
-    const data = await this.pool.query("SELECT * from Users").catch(err => console.error("getUsers failed:", err));
-    return data.rows;
-  }
+  async getUsers() {
+  try {
+    const rows = await new Promise((resolve, reject) => {
+      this.db.all("SELECT * FROM Users", [], (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      });
+    });
 
-  async checkLoginInfo(username, email, password) {
-    //console.log(username, email);
-    const illegalUnameChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*@#~?.,`\n]/;
-    const nameCheck = username.length < 3 || username.length > 32 || illegalUnameChars.test(username);
-    const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
-    const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
-    //console.log(nameCheck, emailCheck);
-    if(nameCheck || emailCheck){
-      console.log("check failed");
+    return rows;
+  } catch (err) {
+    console.error("getUsers failed:", err);
+    return [];
+  }
+}
+
+  async checkLoginInfo(email, password) {
+  const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
+  const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
+
+  if (emailCheck) {
+    console.log("check failed");
+    return false;
+  }
+  let match = false;
+  try {
+    const lowerEmail = email.toLowerCase();
+    const row = await new Promise((resolve, reject) => {
+      this.db.get(
+        "SELECT salt, passHash FROM Users WHERE email = ?",
+        [lowerEmail],
+        (err, row) => {
+          if (err) return reject(err);
+          resolve(row);
+        }
+      );
+    });
+    if (!row) {
       return false;
     }
-    let match = false;
-    let data;
-    try {
-      const lowerEmail = email.toLowerCase();
-      data = await this.pool.query(
-        "SELECT salt, passHash FROM Users WHERE username = $1 AND email = $2",
-        [username, lowerEmail]
-      );
-    } catch (err) {
-      console.error("checkLoginInfo failed", err);
-      return match;
-    }
-    if (!data.rows.length) {
-      return match;
-    }
-    const { salt, passhash } = data.rows[0];
-    console.log(salt);
-    match = await hash.verify(salt, password, passhash);
+    const { salt, passHash } = row;
+    match = await hash.verify(salt, password, passHash);
     return match;
+  } catch (err) {
+    console.error("checkLoginInfo failed", err);
+    return false;
+  }
+}
+  
+async getUserID(email){
+try {
+    const row = await new Promise((resolve, reject) => {
+      this.db.get(
+        "SELECT userID FROM Users WHERE email = ?",
+        [email],
+        (err, row) => {
+          if (err) return reject(err);
+          resolve(row);
+        }
+      );
+    });
+  return row;
   }
 
-  async checkUserExists(username, email){
-    console.log(username, email)
-    const queryText = "SELECT username, email FROM Users WHERE username = $1 AND email = $2";
-    const data = await this.pool.query(
-      queryText,
-      [username, email]
-    ).catch(err =>{
-        console.log(err);
-    })
-    console.log(data.rows);
-    console.log(data.rows.length);
-    if(data.rows.length >= 1){
-      return {success: false, message: "User already exists"};
-    }
-    else{
-      return {success:true, message: "Adding User..."};
+catch (err) {
+    console.error("getUserID:", err);
+    return { success: false, message: "Database error" };
+  }
+}
+
+async checkUserExists(username, email) {
+  console.log(username, email);
+
+  try {
+    const row = await new Promise((resolve, reject) => {
+      this.db.get(
+        "SELECT username, email FROM Users WHERE username = ? AND email = ?",
+        [username, email],
+        (err, row) => {
+          if (err) return reject(err);
+          resolve(row);
+        }
+      );
+    });
+
+    console.log(row);
+
+    if (row) {
+      return { success: false, message: "User already exists" };
+    } else {
+      return { success: true, message: "Adding User..." };
     }
 
+  } catch (err) {
+    console.error("checkUserExists failed:", err);
+    return { success: false, message: "Database error" };
   }
+}
 }
 
 const connect = new Connect();
