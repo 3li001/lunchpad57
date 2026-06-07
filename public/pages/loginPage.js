@@ -5,21 +5,43 @@ function setupLogin() {
     if (!loginForm) return;
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault()
-        const email = e.target.Email.value
-        const password = e.target.Password.value
+        const submitBtn = loginForm.querySelector('input[type="submit"]')
 
-        const res = await fetch("/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        })
+        const Email = e.target.Email.value
+        const Password = e.target.Password.value
 
-        const data = await res.json()
-        if (res.ok) {
-            window.location.href = "/"
-        } 
-        else {
-            TOAST_MANAGER.notifySmall(data.message || "Login failed!")
+        try {
+            const res = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: Email, password: Password })
+            })
+
+            const data = await res.json()
+            
+            if (res.ok && data !== false && data !== "false") {
+                TOAST_MANAGER.notifySmall("Successfully logged in!")
+                setTimeout(() => {
+                    window.location.href = data.redirect || "/"
+                }, 1000)
+            } else {
+                let errorMsg = "Invalid email or password!"
+                if (data && typeof data === "object" && data.message) {
+                    errorMsg = data.message
+                }
+                TOAST_MANAGER.notifySmall(errorMsg)
+                if (submitBtn) {
+                    submitBtn.value = "Login"
+                    submitBtn.disabled = false
+                }
+            }
+        } catch (err) {
+            console.error(err)
+            TOAST_MANAGER.notifySmall("Network error occurred.")
+            if (submitBtn) {
+                submitBtn.value = "Login"
+                submitBtn.disabled = false
+            }
         }
     })
 }
@@ -29,6 +51,8 @@ function setupRegister() {
     if (!registerForm) return;
     registerForm.addEventListener("submit", async (e) => {
         e.preventDefault()
+        const submitBtn = registerForm.querySelector('input[type="submit"]')
+
         const name = e.target.Name.value
         const email = e.target.Email.value
         const password = e.target.Password.value
@@ -39,41 +63,84 @@ function setupRegister() {
             return
         }
 
-        const res = await fetch("/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password })
-        })
+        if (submitBtn) {
+            submitBtn.value = "Registering..."
+            submitBtn.disabled = true
+        }
 
-        const data = await res.json()
-        if (res.ok) {
-            TOAST_MANAGER.notifySmall("Account created, please log in!")
-            tabs[0].click()
-        } 
-        else {
-            TOAST_MANAGER.notifySmall(data.message || "Registration failed!")
+        try {
+            const res = await fetch("/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password, confirmPassword })
+            })
+
+            const data = await res.json()
+            if (res.ok) {
+                TOAST_MANAGER.notifySmall("Account created, please log in!")
+                registerForm.reset()
+                if (tabs && tabs[0]) tabs[0].click()
+            } else {
+                TOAST_MANAGER.notifySmall(data.message || "Registration failed!")
+            }
+        } catch (err) {
+            console.error(err)
+            TOAST_MANAGER.notifySmall("Network error occurred.")
+        } finally {
+            if (submitBtn) {
+                submitBtn.value = "Register"
+                submitBtn.disabled = false
+            }
         }
     })
 }
-
 
 function setupResetPassword() {
     const resetForm = document.querySelector("#ResetPasswordForm");
     if (!resetForm) return;
     resetForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const submitBtn = resetForm.querySelector('input[type="submit"]')
+
         const formData = new FormData(resetForm);
         const data = Object.fromEntries(formData.entries());
-        const res = await fetch("/auth/reset-password", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        if (res.ok) {
-            window.location.href = "/auth/login";
-        } else {
-            TOAST_MANAGER.notifySmall(result.message);
+
+        if (data.password !== data.confirmPassword) {
+            TOAST_MANAGER.notifySmall("Passwords do not match!")
+            return
+        }
+
+        if (submitBtn) {
+            submitBtn.value = "Updating..."
+            submitBtn.disabled = true
+        }
+
+        try {
+            const res = await fetch("/auth/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (res.ok) {
+                TOAST_MANAGER.notifySmall("Password updated successfully!")
+                setTimeout(() => {
+                    window.location.href = "/auth/login";
+                }, 1500)
+            } else {
+                TOAST_MANAGER.notifySmall(result.message || "Reset failed.");
+                if (submitBtn) {
+                    submitBtn.value = "Update Password"
+                    submitBtn.disabled = false
+                }
+            }
+        } catch (err) {
+            console.error(err)
+            TOAST_MANAGER.notifySmall("Network error occurred.")
+            if (submitBtn) {
+                submitBtn.value = "Update Password"
+                submitBtn.disabled = false
+            }
         }
     });
 }
@@ -83,27 +150,24 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (loginPanel) {
         tabs = loginPanel.querySelectorAll(".modal-tabs button");
-        let tab_contents = loginPanel.querySelectorAll(".modal-content > *");
-        
-        for (const tab of tabs) {
+        let tab_contents = loginPanel.querySelectorAll(".modal-content > form");    
+        tabs.forEach((tab, index) => {
             tab.addEventListener("click", () => {
-                
                 tabs.forEach(t => t.classList.remove("selected"));
-                tab.classList.add("selected");
-                tab_contents.forEach(content => {
-
-                    content.style.display = content.id === tab.textContent ? "flex" : "none";
+                tab.classList.add("selected");  
+                tab_contents.forEach((content, cIndex) => {
+                    content.style.display = index === cIndex ? "flex" : "none";
                 });
             });
-        }
+        });
+
         if (tabs[0]) tabs[0].click();
 
         setupLogin();
         setupRegister();
         setupResetPassword(); 
 
-        // logic for toggling the forgot password form - amro
-        const forgotLink = document.getElementById('Forgor'); // blud said forgor🥀
+        const forgotLink = document.getElementById('Forgor');
         const loginForm = document.getElementById('Login');
         const registerForm = document.getElementById('Register');
         const forgotForm = document.getElementById('Forgot');
@@ -112,9 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (forgotLink) {
             forgotLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'none';
-                forgotForm.style.display = 'flex';
+                if (loginForm) loginForm.style.display = 'none';
+                if (registerForm) registerForm.style.display = 'none';
+                if (forgotForm) forgotForm.style.display = 'flex';
                 tabs.forEach(t => t.classList.remove("selected"));
             });
         }
@@ -152,6 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 } catch (err) {
                     console.error(err);
                     TOAST_MANAGER.notifySmall("Connection failed.");
+                    submitBtn.value = "Send Reset Code";
+                    submitBtn.disabled = false;
                 }
             });
         }
