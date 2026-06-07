@@ -13,6 +13,7 @@ class Connect{
   this.isConnected = null;
   this.connectionError = "Server is establishing connection to database, please hold a moment.";
 
+  this.resetTokens = new Map();
 
   this.tryToConnect();
   
@@ -162,7 +163,6 @@ catch (err) {
 
 async checkUserExists(username, email) {
   console.log(username, email);
-
   try {
     const row = await new Promise((resolve, reject) => {
       this.db.get(
@@ -188,6 +188,58 @@ async checkUserExists(username, email) {
     return { success: false, message: "Database error" };
   }
 }
+
+//generates a token if the user email exists in the SQLite db
+  async generateResetToken(email) {
+    try {
+      const row = await new Promise((resolve, reject) => {
+        this.db.get("SELECT email FROM Users WHERE LOWER(email) = LOWER(?)", [email], (err, row) => {
+          if (err) return reject(err);
+          resolve(row);
+        });
+      });
+
+      if (!row) return null;
+      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      this.resetTokens.set(email.toLowerCase(), token);
+      return token;
+    } catch (err) {
+      console.error("generateResetToken error:", err);
+      return null;
+    }
+  }
+
+  //verify if code matches to internal map
+  verifyResetToken(email, token) {
+    const savedToken = this.resetTokens.get(email.toLowerCase());
+    return savedToken && savedToken === token;
+  }
+
+  //updates the passHash and salt columns for a user in the SQLite database
+  async resetUserPasswordWithToken(email, passHash, salt) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        this.db.run(
+          "UPDATE Users SET passHash = ?, salt = ? WHERE LOWER(email) = LOWER(?)",
+          [passHash, salt, email],
+          function (err) {
+            if (err) return reject(err);
+            resolve(this.changes > 0);
+          }
+        );
+      });
+
+      if (result) {
+        this.resetTokens.delete(email.toLowerCase());
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error("resetUserPasswordWithToken error:", err);
+      return false;
+    }
+  }
+
 }
 
 const connect = new Connect();
