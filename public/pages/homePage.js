@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async() => {
                     time:"09:30"
                 }
             ];
-        //console.log(stops);
+        console.log(stops);
         document.getElementById("RideList").style.display = "none";
         document.getElementById("RideDetail").style.display = "flex";
 
