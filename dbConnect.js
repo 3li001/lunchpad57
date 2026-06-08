@@ -187,11 +187,12 @@ async checkUserExists(username, email) {
         }
       );
     });
-        catch (err) {
+      }    catch (err) {
             console.error("getUserID:", err);
             return { success: false, message: "Database error" };
         }
-    }
+    
+  }
 
     async checkUserExists(username, email) {
         console.log(username, email);
