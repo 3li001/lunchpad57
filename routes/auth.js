@@ -1,33 +1,42 @@
 const route = require("@lib/createRoute")("/auth")
 const { getDatabase } = require("../lib/devDatabase")
+const { sendEmail } = require("../lib/emailService.js");
 const bcrypt = require("bcryptjs")
-
+const connect = require("../dbConnect.js");
 // Could maybe put together an auth config with this
 const SALT_ROUNDS = 10
 
 route.router.post("/register", async (req, res) => {
-    const { name, email, password } = req.body
-
+    const { name, email, password } = req.body;
     if (!name || !email || !password) {
-        return res.status(400).json({ message: "Missing fields." })
+        return res.status(400).json({
+            message: "Missing fields."
+        });
     }
-
     try {
-        const user = await getDatabase().getUserByEmail(email)
-        if (user) {
-            return res.status(409).json({ message: "Email in use." })
+        const exists = await connect.checkUserExists(name, email);
+
+        if (!exists.success) {
+            return res.status(409).json({
+                message: exists.message
+            });
         }
-
-        const pass_hash = await bcrypt.hash(password, SALT_ROUNDS)
-        await getDatabase().addUser(name, email, pass_hash)
-
-        res.status(201).json({ message: "Account created." })
+        const result = await connect.addUser(name, email, password);
+        if (!result.success) {
+            return res.status(500).json({
+                message: result.message
+            });
+        }
+        return res.status(201).json({
+            message: "Account created."
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "There was a problem creating your account."
+        });
     }
-    catch (error) {
-        console.error(error)
-        res.status(500).json({ message: "There was a problem creating your account, try again later." })
-    }
-})
+});
 
 route.router.post("/login", async (req, res) => {
     const { email, password } = req.body
@@ -37,15 +46,19 @@ route.router.post("/login", async (req, res) => {
     }
 
     try {
-        const user = await getDatabase().getUserByEmail(email)
+        let login = await connect.checkLoginInfo(email, password);
 
-        if (!user || !await bcrypt.compare(password, user.getPassword())) {
-            return res.status(401).json({ message: "Invalid email or password." })
-        }
-
-        req.session.user_id = user.getId()
+    console.log(login);
+    
+    // storing the users session info
+    if (login) {
+     req.session.user_id = connect.getUserID(email);
 
         res.json({ message: "Logged in!" })
+    }
+        
+
+        
     }
     catch (error) {
         console.error(error)
@@ -76,15 +89,11 @@ route.router.get("/forgot-password", (req, res) => {
 route.router.post("/forgot-password", async (req, res) => {
     try {
         const { email } = req.body;
-        const db = getDatabase();
-
-        const token = db.generateResetToken(email);
+        const token = await connect.generateResetToken(email);
         if (!token) {
             return res.status(404).json({ message: "No account found" });
         }
-        
         await sendEmail(email, "Password Reset", `Your code: ${token}`);
-        
         res.json({
             message: "Check your email outbox for the code",
             redirect: `/auth/reset-password?email=${encodeURIComponent(email)}`
@@ -102,23 +111,46 @@ route.router.get("/reset-password", (req, res) => {
     });
 });
 
-route.router.post("/reset-password", (req, res) => {
+route.router.post("/reset-password", async (req, res) => {
     const { email, token, password, confirmPassword } = req.body;
-    const db = getDatabase();
+
+    if (!email || !token || !password || !confirmPassword) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
 
     if (password !== confirmPassword) {
         return res.status(400).json({ message: "Passwords do not match!" });
     }
+
+    // 1. Validate the code from memory map
+    const isValidToken = connect.verifyResetToken(email, token);
+    if (!isValidToken) {
+        return res.status(400).json({ message: "Invalid or expired verification code." });
+    }
     
-    const pass_hash = bcrypt.hashSync(password, 10);
-    const success = db.resetUserPasswordWithToken(email, token, pass_hash);
-    if (success) {
-        res.status(200).json({ message: "Success" });
-    } 
-    else {
-        res.status(401).json({ message: "Invalid verification code from outbox." });
+    try {
+        // 2. Import your password hash utility from the ROOT folder
+        const passwordHashLib = require("../passwordHash.js");
+        
+        // 3. Generate a fresh 32-character random salt
+        const newSalt = passwordHashLib.saltGen();
+        
+        // 4. Pass the salt first, plainText password second
+        const pass_hash = await passwordHashLib.passwordHash(newSalt, password);
+
+        // 5. Update the SQLite row inside test.db
+        const success = await connect.resetUserPasswordWithToken(email, pass_hash, newSalt);
+        if (success) {
+            return res.json({ message: "Password updated successfully!" });
+        } else {
+            return res.status(500).json({ message: "Failed to update database record." });
+        }
+    } catch (err) {
+        console.error("Error inside reset-password catch block:", err);
+        return res.status(500).json({ message: "Error hashing password structure." });
     }
 });
+
 
 
 module.exports = route
