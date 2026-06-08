@@ -1,8 +1,12 @@
 const LADYWOOD_COORDS = [52.482273, -1.90359];
 
-document.addEventListener("DOMContentLoaded", () => {
+
+//const rideshares = await connect.getRideshares();
+///let stops = [];
+document.addEventListener("DOMContentLoaded", async() => {
     let map = L.map("RideMap", { zoomControl: false }).setView(LADYWOOD_COORDS, 12);
-    
+    let rideshares = RIDESHARES;
+//console.log(rideshares);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         maxZoom: 19,
@@ -14,13 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let routeLayers = [];
     let selectedRide = null;
 
-    function clearMap() {
-        routeLayers.forEach(l => { map.removeLayer(l); });
-        routeLayers = [];
-    }
-
-    function showRideOnMap(stops) {
+   
+   function showRideOnMap(stops) {
         clearMap();
+        
         const coords = stops.map(s => { return s.coords; });
 
         stops.forEach((stop, i) => {
@@ -103,35 +104,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showDetail(ride) {
         selectedRide = ride;
+        const stops = [
+                {
+                    name: ride.start_placeName,
+                    coords: [ride.start_latitude, ride.start_longitude],
+                    time:"09:00"
+                },
+                {
+                    name: ride.end_placeName,
+                    coords: [ride.end_latitude, ride.end_longitude],
+                    time:"09:30"
+                }
+            ];
+        //console.log(stops);
         document.getElementById("RideList").style.display = "none";
         document.getElementById("RideDetail").style.display = "flex";
 
-        document.getElementById("DetailDriverName").textContent = ride.driver_name;
-        document.getElementById("DetailDriverCar").textContent = `${ride.car_model} | ${ride.registration}`
-        document.getElementById("DetailFrom").textContent = ride.start_location;
-        document.getElementById("DetailTo").textContent = ride.end_location;
-        document.getElementById("DetailTime").textContent = " Departs " + ride.start_time;
-        document.getElementById("DetailSeats").textContent = " " + ride.seats_available +
-            " seat" + (ride.seats_available === 1 ? "" : "s") + " available";
+        document.getElementById("DetailDriverName").textContent = ride.userName;
+        document.getElementById("DetailDriverCar").textContent = "Volksawagon | AGSGAS"//`${ride.car_model} | ${ride.registration}`
+        document.getElementById("DetailFrom").textContent = ride.start_placeName;
+        document.getElementById("DetailTo").textContent = ride.end_placeName;
+        document.getElementById("DetailTime").textContent = " Departs " //+ ride.start_time;
+        document.getElementById("DetailSeats").textContent = " " + 1//ride.seats_available +
+            " seat available" //+ (ride.seats_available === 1 ? "" : "s") + " available";
 
         const selectPickup = document.getElementById("RegisterPickup")
         const selectDropoff = document.getElementById("RegisterDropoff")
 
         selectPickup.innerHTML = ''
         selectDropoff.innerHTML = ''
-
-        for (const stop of ride.stops) {
+        
+        for (const stop of stops) {
             const stopOpt = `<option>${stop.name}</option>`
             selectPickup.innerHTML += stopOpt
             selectDropoff.innerHTML += stopOpt
         }
 
-        renderStops(ride.stops);
-        showRideOnMap(ride.stops);
+
+        //console.log(stops);
+        renderStops(stops);
+        showRideOnMap(stops);
     }
 
     function showList() {
         selectedRide = null;
+        //console.log("ShowList");
         document.getElementById("RideDetail").style.display = "none";
         document.getElementById("RideList").style.display = "flex";
         
@@ -170,13 +187,22 @@ document.addEventListener("DOMContentLoaded", () => {
         filterRides();
     });
 
+    function clearMap() {
+    routeLayers.forEach(l => { map.removeLayer(l); });
+    routeLayers = [];
+}
     document.querySelectorAll(".ride-card").forEach(card => {
-        card.addEventListener("click", () => {
-            const id = parseInt(card.dataset.id);
-            const ride = RIDESHARES.find(r => { return r.id === id; });
-            if (ride) showDetail(ride);
-        });
+    card.addEventListener("click", () => {
+        const id = parseInt(card.dataset.id);
+        const ride = rideshares.find(r => { return Number(r.driverID) === id; });
+       //console.log(id);
+       console.log(ride);
+
+     
+        
+        if (ride) showDetail(ride);
     });
+});
 
     document.getElementById("BackToListBtn").addEventListener("click", showList);
 
