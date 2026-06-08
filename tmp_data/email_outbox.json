@@ -1,0 +1,16 @@
+[
+    {
+        "from": "rideshare@example.com",
+        "to": "test@gmail.com",
+        "subject": "Password Reset",
+        "text": "Your code: 218545",
+        "created_at": "2026-06-07T21:03:33.051Z"
+    },
+    {
+        "from": "rideshare@example.com",
+        "to": "test@gmail.com",
+        "subject": "Password Reset",
+        "text": "Your code: 735642",
+        "created_at": "2026-06-07T21:10:50.119Z"
+    }
+]
