@@ -429,7 +429,7 @@ footer {
         color: #fff !important;
     }
 
-    p, h1, h2, h3, h4, h5, h6, a, li {
+    p, h1, h2, h3, h4, h5, h6, a, li, span {
         cursor: pointer !important;
         border-radius: var(--radius-sm);
         transition:
@@ -445,7 +445,8 @@ footer {
     h5:hover,
     h6:hover,
     a:hover,
-    li:hover {
+    li:hover,
+    span:hover {
         outline: 2px solid #f59e0b !important;
         outline-offset: 3px;
         background-color: rgba(245, 158, 11, 0.12) !important;
@@ -1645,6 +1646,7 @@ main:has(#RideLayout) {
     /* padding: 0.35em 0; */
     background: var(--col-primary);
     border-radius: var(--radius-lg);
+    max-height: 700px;
 }
 
 .ride-card {

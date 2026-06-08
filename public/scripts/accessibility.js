@@ -34,12 +34,13 @@ class TTS {
 
         document.body.addEventListener("click", (e) => {
             if (!this.#select_mode) return
-            const target = e.target.closest("p, h1, h2, h3, h4, h5, h6, a, li")
+            const target = e.target.closest("p, h1, h2, h3, h4, h5, h6, a, li, span")
             if (target) {
                 e.preventDefault()
+                e.stopPropagation()
                 this.readText(target.innerText)
             }
-        })
+        }, { capture: true })
     }
 
     #stop() {
