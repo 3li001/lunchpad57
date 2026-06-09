@@ -1,0 +1,33 @@
+extends layout
+
+block append head
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css")
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
+
+block content
+    div#CreateRouteLayout
+        div#CreateRouteForm
+            h2.form-section-title Create a route
+            form(action="/driver/create_route" method="POST")
+                div.field-row
+                    div.field
+                        label(for="StartLocation") Start location
+                        input#StartLocation(type="text" name="start_location" placeholder="e.g. City Centre" required)
+                    div.field
+                        label(for="EndLocation") End location
+                        input#EndLocation(type="text" name="end_location" placeholder="e.g. Norwich Airport" required)
+                div.field
+                    label(for="StartTime") Start time
+                    input#StartTime(type="time" name="start_time" value="09:00" required)
+                div.field
+                    label(for="Seats") Available seats
+                    input#Seats(type="number" name="seats" min="1" max="8" placeholder="e.g. 3" required)
+                div.field
+                    label(for="Stops") Stops
+                    span.field-hint optional — one per line
+                    textarea#Stops(name="stops" placeholder="e.g. Park and Ride\nUniversity of East Anglia")
+                div.form-actions
+                    button(type="submit") Create route
+
+        div#CreateRouteMap
+            div#Map

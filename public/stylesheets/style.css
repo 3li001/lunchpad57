@@ -2341,3 +2341,321 @@ main:has(#RideLayout) {
         overflow-y: unset !important;
     }
 }
+
+#CreateRouteLayout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#CreateRouteForm {
+    width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 1.2rem;
+    overflow-y: auto;
+    border-right: 1px solid rgba(var(--col-secondary-rgb), 0.1);
+    background-color: var(--col-primary);
+}
+
+.form-section-title {
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.45;
+    margin-bottom: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 0.85rem;
+}
+
+.field label {
+    font-size: 0.82em;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.field-hint {
+    font-size: 0.74em;
+    opacity: 0.4;
+    margin-top: -2px;
+}
+
+.field input,
+.field textarea {
+    padding: 0.52em 0.75em;
+    border: 1.5px solid rgba(var(--col-secondary-rgb), 0.15);
+    border-radius: var(--radius-sm);
+    font-size: 0.88em;
+    background: rgba(var(--col-secondary-rgb), 0.04);
+    color: var(--col-txt-primary);
+    font-family: inherit;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.field input:focus,
+.field textarea:focus {
+    border-color: var(--col-tertiary);
+}
+
+.field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.field-row {
+    display: flex;
+    gap: 8px;
+}
+
+.field-row .field {
+    flex: 1;
+}
+
+#CreateRouteForm .form-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(var(--col-secondary-rgb), 0.1);
+}
+
+#CreateRouteForm .form-actions button {
+    width: 100%;
+    padding: 0.65em;
+    background: var(--col-tertiary);
+    color: var(--col-txt-tertiary);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter var(--transition-fast);
+}
+
+#CreateRouteForm .form-actions button:hover {
+    filter: brightness(1.1);
+}
+
+#CreateRouteMap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#CreateRouteMap #Map {
+    flex: 1;
+    background: #e8e7e2;
+}
+
+main:has(#CreateRouteLayout) {
+    overflow: hidden;
+}
+
+#CreateRouteLayout ~ footer {
+    display: none;
+}
+
+/*
+    Driver Routes — /driver/routes
+*/
+
+#DriverRoutesLayout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#DriverRoutesList {
+    width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(var(--col-secondary-rgb), 0.1);
+    overflow: hidden;
+    background-color: var(--col-primary);
+}
+
+#DriverRoutesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9em 1.2em;
+    border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.1);
+    background: rgba(var(--col-secondary-rgb), 0.03);
+    flex-shrink: 0;
+}
+
+#DriverRoutesHeader > span {
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.45;
+}
+
+.new-route-btn {
+    padding: 0.35em 0.75em;
+    background: var(--col-tertiary);
+    color: var(--col-txt-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 0.78em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: filter var(--transition-fast);
+
+    &:hover {
+        text-decoration: none;
+        filter: brightness(1.1);
+    }
+}
+
+#RouteListItems {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.route-card {
+    padding: 0.9em 1.2em;
+    border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.08);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    border-left: 3px solid transparent;
+}
+
+.route-card:hover {
+    background: rgba(var(--col-secondary-rgb), 0.05);
+}
+
+.route-card.active {
+    background: rgba(var(--col-tertiary-rgb), 0.07);
+    border-left-color: var(--col-tertiary);
+}
+
+.rc-route {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88em;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.rc-route .fa-chevron-right {
+    font-size: 0.6em;
+    opacity: 0.4;
+}
+
+.route-card.active .rc-from,
+.route-card.active .rc-to {
+    color: var(--col-tertiary);
+}
+
+.rc-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.rc-pill {
+    font-size: 0.72em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.55;
+}
+
+.rc-seats {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.rc-seats-n {
+    font-size: 1.1em;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.rc-seats-l {
+    font-size: 0.58em;
+    text-transform: uppercase;
+    opacity: 0.4;
+}
+
+#NoRoutes {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    opacity: 0.4;
+    font-size: 0.85em;
+    padding: 2em;
+    text-align: center;
+
+    i {
+        font-size: 2em;
+        margin-bottom: 0.25em;
+    }
+
+    a {
+        color: var(--col-tertiary);
+        text-decoration: underline;
+        opacity: 1;
+    }
+}
+
+#DriverRoutesMap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#DriverRoutesMap #Map {
+    flex: 1;
+    background: #e8e7e2;
+}
+
+main:has(#DriverRoutesLayout) {
+    overflow: hidden;
+}
+
+#DriverRoutesLayout ~ footer {
+    display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #CreateRouteLayout,
+    #DriverRoutesLayout {
+        flex-direction: column;
+    }
+
+    #CreateRouteForm,
+    #DriverRoutesList {
+        width: 100%;
+        max-height: 55%;
+    }
+
+    #CreateRouteMap,
+    #DriverRoutesMap {
+        flex: none;
+        height: 280px;
+    }
+}
