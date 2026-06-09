@@ -9,14 +9,13 @@ block content
                 form#RegisterDriverForm
                     div.section-title Vehicle Details
                     div.form-input
-                        label(for="make") Make
-                        input#make(type="text" name="make" placeholder="e.g. Toyota" required)
-                        label(for="model") Model
-                        input#model(type="text" name="model" placeholder="e.g. Corolla" required)
-                        label(for="year") Year
-                        input#year(type="number" name="year" placeholder="e.g. 2020" min="1900" required)
-                        label(for="mpg") MPG
-                        input#mpg(type="number" name="mpg" placeholder="e.g. 35" min="1" max="200" required)
+                        select#make Make
+                            option(value="") Select a make
+                            option(value="Toyota") Toyota
+                        select#model Model
+                            option(value="") Select a make first
+                        select#year Year
+                            option(value="") Select a make and model first
                     div.section-title(style="margin-top: 1em") License Plate
                     div.form-input
                         label(for="numberPlate") Number Plate

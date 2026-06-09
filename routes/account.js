@@ -10,7 +10,7 @@ route.router.get("/", async (req, res) => {
     const user = await connect.getUser(user_id)
     console.log(user);
     const driver = await connect.getDriver(user_id);
-    console.log(driver);
+    //console.log(driver);
     //const vehicle = driver ? db.getVehicleById(driver.vehicleID) : null
 
     res.render("account", {

@@ -53,7 +53,7 @@ class Connect {
             errorMsg: this.connectionError
         };
     }
-
+    
     async addUser(name, email, password) {
         email = email.toLowerCase()
         try {
@@ -176,7 +176,41 @@ class Connect {
             return{success:false, message: "Database error"};
         }
     }
+async getVehicleID(make,model,year){
+    try{
+        const row=await new Promise((resolve,reject)=>{
+            this.db.get("SELECT vehicleID FROM Vehicles WHERE vehicleMake=? AND vehicleModel =? AND  vehicleYear=?",[make,model,year],
+                (err,row)=>{
+                    if(err) return reject(err);
+                    resolve(row);
+                }
+            );
+        });
+        return row;
+    }
+    catch(err){
+        console.error("getVehicle:",err);
+        return{success:false,message:"Database error"};
+    }
+}
+async addDriver(userID,vehicleID,numberplate){
+    try{
+        const row=await new Promise((resolve,reject)=>{
+            this.db.run("INSERT into Drivers(userID,vehicleID,numberplate) Values(?,?,?)",[userID,vehicleID,numberplate],
+                (err,row)=>{
+                    if(err) return reject(err);
+                    resolve(row);
+                }
 
+            );
+        });
+        return row;
+    }
+    catch(err){
+        console.error("addDriver:",err);
+        return{success:false,message:"Database error"};
+    }
+}
     async getUserID(email) {
         try {
             const row = await new Promise((resolve, reject) => {
@@ -196,6 +230,36 @@ catch (err) {
     console.error("getUserID:", err);
     return { success: false, message: "Database error" };
   }
+}
+async getVehicleMakes(){
+    return await new Promise((resolve, reject)=>{
+        this.db.all("SELECT DISTINCT vehicleMake from Vehicles",
+        (err,row)=>{
+            if (err) return reject(err);
+            resolve(row);
+        }
+     );
+    });
+}
+async getVehicleModels(make){
+    return await new Promise((resolve, reject)=>{
+        this.db.all("SELECT DISTINCT vehicleModel FROM Vehicles WHERE vehicleMake=?",[make],
+            (err,row)=>{
+                if(err) return reject(err);
+                resolve(row);
+            }
+        );
+    });
+}
+async getVehicleYears(model){
+    return await new Promise((resolve,reject)=>{
+        this.db.all("SELECT vehicleYear FROM Vehicles WHERE vehicleModel=?",[model],
+            (err,row)=>{
+                if(err) return reject(err);
+                resolve(row);
+            }
+        );
+    });
 }
 async getRideshares() {
   return await new Promise((resolve, reject) => {

@@ -38,7 +38,68 @@ route.router.post("/register", async (req, res) => {
         });
     }
 });
-
+route.router.post("/getVehicleMakes", async (req,res)=>{
+    try{
+        const vehicles=await connect.getVehicleMakes();
+         res.json(vehicles);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting vehicle makes"});
+    }
+})
+route.router.post("/getVehicleModels", async (req,res)=>{
+    try{
+        console.log(req.body.make);
+        const vehicles=await connect.getVehicleModels(req.body.make);
+         res.json(vehicles);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting vehicle makes"});
+    }
+})
+route.router.post("/getVehicleYears", async (req,res)=>{
+    try{
+        const vehicles=await connect.getVehicleYears(req.body.model);
+         res.json(vehicles);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting vehicle makes"});
+    }
+})
+route.router.post("/addDriver", async (req,res)=>{
+    const vehicleMake=String(req.body.make);
+    const vehicleModel=String(req.body.model);
+    const vehicleYear=Number(req.body.year);
+    const numberplate=req.body.numberPlate;
+    const userID=req.session.user_id?.userID;
+    console.log(userID);
+    
+    //console.log(vehicleID);
+    console.log(vehicleMake);
+    console.log(vehicleModel);
+    console.log(numberplate);
+    console.log(vehicleYear);
+    try{
+        const id=await connect.getVehicleID(vehicleMake,vehicleModel,vehicleYear);
+        //const id=await connect.getVehicleID(vehicleMake,vehicleModel,vehicleYear);
+        const vehicleID=id.vehicleID;
+        console.log(vehicleID)
+        try{
+        const success=await connect.addDriver(userID,vehicleID,numberplate);
+        }catch(error){
+            console.error(error);
+            res.status(500).json({message:"There was a proble adding driver, try again later"});
+        }
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message:"There was a problem getting vehicle, try again later"})
+    }
+   return res.status(200).json({
+    success: true,
+    message: "You're now registered as a driver!"
+});
+    
+})
 route.router.post("/login", async (req, res) => {
     const { email, password } = req.body
 
