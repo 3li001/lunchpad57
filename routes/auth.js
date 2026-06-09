@@ -54,6 +54,8 @@ route.router.post("/login", async (req, res) => {
         // storing the users session info
         if (login) {
             req.session.user_id = await connect.getUserID(email);
+            
+            //console.log(req.session.user_id);
             res.json({ message: "Logged in!" })
         }
         else {

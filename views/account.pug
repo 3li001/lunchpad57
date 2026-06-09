@@ -32,8 +32,8 @@ block content
             div.account-avatar
                 i.fa-solid.fa-user
             div.account-header-info
-                div.account-name #{user.getName()}
-                div.account-email #{user.getEmail()}
+                div.account-name #{user.userName}
+                div.account-email #{user.email}
                 if driver
                     span.role-badge.role-badge--driver
                         i.fa-solid.fa-car
@@ -51,11 +51,11 @@ block content
         div#ProfilePane.tab-pane.active
             div.content-section
                 div.section-title Personal Details
-                +fieldRow('field-name', 'Name', user.getName())
-                +fieldRow('field-email', 'Email', user.getEmail(), 'email')
+                +fieldRow('field-name', 'Name', user.userName)
+                +fieldRow('field-email', 'Email', user.email, 'email')
 
         div#DriverPane.tab-pane
-            if driver && vehicle
+            if driver
                 div.content-section
                     div.section-title Driver Status
                     div.driver-status-card
@@ -68,19 +68,19 @@ block content
                     div.section-title Your Vehicle
                     div.field-row
                         span.field-label Make
-                        span.field-value #{vehicle.vehicleMake}
+                        span.field-value #{driver.vehicleMake}
                     div.field-row
                         span.field-label Model
-                        span.field-value #{vehicle.vehicleModel}
+                        span.field-value #{driver.vehicleModel}
                     div.field-row
                         span.field-label Year
-                        span.field-value #{vehicle.vehicleYear}
+                        span.field-value #{driver.vehicleYear}
                     div.field-row
                         span.field-label MPG
-                        span.field-value #{vehicle.mpg}
+                        span.field-value #{driver.mpg}
                     div.field-row
                         span.field-label Number Plate
-                        span.field-value #{driver.numberPlate}
+                        span.field-value #{driver.numberplate}
             else
                 div.content-section
                     div.driver-cta
