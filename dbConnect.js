@@ -142,6 +142,40 @@ class Connect {
             return false;
         }
     }
+    async getUser(userID){
+        try{
+            const row = await new Promise((resolve, reject) =>{
+                this.db.get("Select * FROM Users WHERE userID = ?",[userID],
+                    (err,row)=>{
+                        if(err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
+        return row;
+        }
+        catch(err){
+            console.error("getUser:",err);
+            return {success:false, message: "Database error"};
+        }
+    }
+    async getDriver(userID){
+        try{
+            const row=await new Promise((resolve,reject)=>{
+                this.db.get("Select * FROM Drivers JOIN Vehicles on drivers.vehicleID=Vehicles.vehicleID Where userID=?",[userID],
+                    (err,row)=>{
+                        if(err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
+            return row;
+        }
+        catch(err){
+            console.error("getDriver:",err);
+            return{success:false, message: "Database error"};
+        }
+    }
 
     async getUserID(email) {
         try {
