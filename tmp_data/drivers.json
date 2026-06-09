@@ -1,1 +1,30 @@
-[]
+[
+    {
+        "driverID": 1,
+        "userID": 3,
+        "vehicleID": 1,
+        "numberPlate": "AB12 CDE",
+        "completedRides": 0
+    },
+    {
+        "driverID": 2,
+        "userID": 3,
+        "vehicleID": 3,
+        "numberPlate": "XY99 ZZZ",
+        "completedRides": 0
+    },
+    {
+        "driverID": 3,
+        "userID": 3,
+        "vehicleID": 4,
+        "numberPlate": "AB12 CDE",
+        "completedRides": 0
+    },
+    {
+        "driverID": 4,
+        "userID": 7,
+        "vehicleID": 5,
+        "numberPlate": "XY34 FGH",
+        "completedRides": 0
+    }
+]

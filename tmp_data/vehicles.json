@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "vehicleID": 1,
+        "vehicleMake": "Toyota",
+        "vehicleModel": "Corolla",
+        "vehicleYear": 2020,
+        "mpg": 35
+    },
+    {
+        "vehicleID": 2,
+        "vehicleMake": "Ford",
+        "vehicleModel": "Focus",
+        "vehicleYear": 2018,
+        "mpg": 40
+    },
+    {
+        "vehicleID": 3,
+        "vehicleMake": "Toyota",
+        "vehicleModel": "Yaris",
+        "vehicleYear": 2021,
+        "mpg": 50
+    },
+    {
+        "vehicleID": 4,
+        "vehicleMake": "Toyota",
+        "vehicleModel": "Corolla",
+        "vehicleYear": 2020,
+        "mpg": 35
+    },
+    {
+        "vehicleID": 5,
+        "vehicleMake": "Ford",
+        "vehicleModel": "Focus",
+        "vehicleYear": 2019,
+        "mpg": 40
+    }
+]

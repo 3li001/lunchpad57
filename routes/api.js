@@ -1,6 +1,7 @@
 const route = require("@lib/createRoute")("/api")
 const { getDatabase } = require("../lib/devDatabase")
 const bcrypt = require("bcryptjs")
+const { isValidPlate, isValidYear, isValidMpg } = require("../lib/validation")
 const connect=require("../dbConnect");
 // TODO: Move to separate API routes
 
@@ -74,21 +75,20 @@ route.router.post("/driver/register", async (req, res) => {
         return res.status(400).json({ message: "All fields are required." })
     }
 
-    const yearNum = parseInt(year)
-    const mpgNum = parseInt(mpg)
-    const currentYear = new Date().getFullYear()
-
-    if (isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear + 1) {
+    if (!isValidYear(year)) {
         return res.status(400).json({ message: "Invalid vehicle year." })
     }
-    if (isNaN(mpgNum) || mpgNum < 1 || mpgNum > 200) {
+    if (!isValidMpg(mpg)) {
         return res.status(400).json({ message: "Invalid MPG value." })
     }
 
     const plate = numberPlate.trim().toUpperCase()
-    if (!/^[A-Z0-9]{2,4} ?[A-Z0-9]{2,4}$/.test(plate)) {
+    if (!isValidPlate(plate)) {
         return res.status(400).json({ message: "Invalid number plate format." })
     }
+
+    const yearNum = parseInt(year)
+    const mpgNum = parseInt(mpg)
 
     try {
         const db = getDatabase()
