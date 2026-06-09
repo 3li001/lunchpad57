@@ -1,168 +1,181 @@
-const fs = require("node:fs");
-const {Pool} = require("pg");
-const path = require("path");
 const sqlite3 = require("sqlite3");
+const crypto = require("crypto");
 const hash = require("./passwordHash.js");
 
-class Connect{
-  constructor(){
-   console.log("dbConnect called");
+class Connect {
+    constructor() {
+        console.log("dbConnect called");
 
-   //const filePath = path.join(__dirname, "test.db");
-   
-  this.isConnected = null;
-  this.connectionError = "Server is establishing connection to database, please hold a moment.";
+        //const filePath = path.join(__dirname, "test.db");
 
-  this.resetTokens = new Map();
+        this.isConnected = null;
+        this.connectionError = "Server is establishing connection to database, please hold a moment.";
 
-  this.tryToConnect();
-  
-}
+        this.resetTokens = new Map();
 
-  // putting this in a function so we can call it repeatedly if it fails, rather than just on the connect creation
-  async tryToConnect(attempts = 0, maxAttempts = 2) {
-     
-    try {
-      this.db = new sqlite3.Database("./test.db");
-      console.log("connected to DB");
-      this.isConnected = true;
-      //console.log(this.isConnected);
-    } catch (err) {
-      console.error("could not connect to DB", err);
-      this.isConnected = false;
-      if (err.code == "ETIMEDOUT") this.connectionError = "Database unavailable, please try again later."
-      else this.connectionError = err.code;
+        this.tryToConnect();
 
-      if (attempts < maxAttempts) {
-        // then try again a few times
-        console.log(`Could not connect to DB, retrying... (attempt ${attempts + 1}/${maxAttempts})`);
-        await this.tryToConnect(attempts + 1, maxAttempts);
-      } else {
-        let errormsg = `Failed to connect after ${maxAttempts} attempts, giving up. Please try again later.`;
-        console.error(errormsg);
-        this.connectionError = errormsg;
-      }
-    }
-  }
-
-
-  // error page redirection check
-  getStatus() {
-    return {
-      connected: this.isConnected, 
-      errorMsg: this.connectionError
-    };
-  }
-
- async addUser(name, email, password) {
-  try {
-    const illegalUnameChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*@#~?.,`\n]/;
-    const nameCheck = name.length < 3 || name.length > 32 || illegalUnameChars.test(name);
-    const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
-    const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
-
-    if (nameCheck || emailCheck) {
-      return { success: false, message: "illegal characters entered" };
     }
 
-    const salt = await hash.saltGen();
-    const passHash = await hash.passwordHash(salt, password);
+    // putting this in a function so we can call it repeatedly if it fails, rather than just on the connect creation
+    async tryToConnect(attempts = 0, maxAttempts = 2) {
+        return new Promise((resolve) => {
+            this.db = new sqlite3.Database("./test.db", (err) => {
+                if (!err) {
+                    console.log("connected to DB");
+                    this.isConnected = true;
+                    return resolve();
+                }
 
-  
-    const queryText = `INSERT INTO Users (username, email, passHash, salt) VALUES (?, ?, ?, ?)`;
+                console.error("could not connect to DB", err);
+                this.isConnected = false;
+                if (err.code == "ETIMEDOUT") this.connectionError = "Database unavailable, please try again later.";
+                else this.connectionError = err.code;
 
-    //sqlite3 uses promises
-    await new Promise((resolve, reject) => {
-      this.db.run(queryText, [name, email, passHash, salt], function (err) {
-        if (err) return reject(err);
-        resolve(this); // `this` has lastID
-      });
-    });
-
-    return { success: true, message: "User added" };
-  } catch (err) {
-    console.error("addUser failed:", err);
-    return { success: false, message: "failed to add user" };
-  }
-}
- 
- 
-  
+                if (attempts < maxAttempts) {
+                    console.log(`Could not connect to DB, retrying... (attempt ${attempts + 1}/${maxAttempts})`);
+                    resolve(this.tryToConnect(attempts + 1, maxAttempts));
+                } else {
+                    const errormsg = `Failed to connect after ${maxAttempts} attempts, giving up. Please try again later.`;
+                    console.error(errormsg);
+                    this.connectionError = errormsg;
+                    resolve();
+                }
+            });
+        });
+    }
 
 
+    // error page redirection check
+    getStatus() {
+        return {
+            connected: this.isConnected,
+            errorMsg: this.connectionError
+        };
+    }
 
-  async getUsers() {
-  try {
-    const rows = await new Promise((resolve, reject) => {
-      this.db.all("SELECT * FROM Users", [], (err, rows) => {
-        if (err) return reject(err);
-        resolve(rows);
-      });
-    });
+    async addUser(name, email, password) {
+        email = email.toLowerCase()
+        try {
+            const illegalUnameChars = /[;:$+="%/|<>{}()\[\]&^£!*@#~?.,`\n]/;
+            const nameCheck = name.length < 3 || name.length > 32 || illegalUnameChars.test(name);
+            const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
+            const emailCheck = email.length < 3 || email.length > 254 || !email.includes("@") || illegalEmailChars.test(email);
 
-    return rows;
-  } catch (err) {
-    console.error("getUsers failed:", err);
-    return [];
-  }
-}
+            if (nameCheck || emailCheck) {
+                return { success: false, message: "illegal characters entered" };
+            }
 
-  async checkLoginInfo(email, password) {
-  const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
-  const emailCheck = (email.length < 3 || email.length > 32 || illegalEmailChars.test(email)) && email.includes("@");
+            const salt = await hash.saltGen();
+            const passHash = await hash.passwordHash(salt, password);
 
-  if (emailCheck) {
-    console.log("check failed");
-    return false;
-  }
-  let match = false;
-  try {
-    const lowerEmail = email.toLowerCase();
-    const row = await new Promise((resolve, reject) => {
-      this.db.get(
-        "SELECT salt, passHash FROM Users WHERE email = ?",
-        [lowerEmail],
-        (err, row) => {
-          if (err) return reject(err);
-          resolve(row);
+
+            const queryText = `INSERT INTO Users (username, email, passHash, salt) VALUES (?, ?, ?, ?)`;
+
+            //sqlite3 uses promises
+            await new Promise((resolve, reject) => {
+                this.db.run(queryText, [name, email, passHash, salt], function (err) {
+                    if (err) return reject(err);
+                    resolve(this); // `this` has lastID
+                });
+            });
+
+            return { success: true, message: "User added" };
+        } catch (err) {
+            console.error("addUser failed:", err);
+            return { success: false, message: "failed to add user" };
         }
-      );
-    });
-    if (!row) {
-      return false;
     }
-    const { salt, passHash } = row;
-    match = await hash.verify(salt, password, passHash);
-    return match;
-  } catch (err) {
-    console.error("checkLoginInfo failed", err);
-    return false;
-  }
-}
-  
-async getUserID(email){
-try {
-    const row = await new Promise((resolve, reject) => {
-      this.db.get(
-        "SELECT userID FROM Users WHERE email = ?",
-        [email],
-        (err, row) => {
-          if (err) return reject(err);
-          resolve(row);
+
+
+
+
+
+
+    async getUsers() {
+        try {
+            const rows = await new Promise((resolve, reject) => {
+                this.db.all("SELECT * FROM Users", [], (err, rows) => {
+                    if (err) return reject(err);
+                    resolve(rows);
+                });
+            });
+
+            return rows;
+        } catch (err) {
+            console.error("getUsers failed:", err);
+            return [];
         }
-      );
-    });
-  return row;
-  }
+    }
+
+    async checkLoginInfo(email, password) {
+        const illegalEmailChars = /[;:$\-+='"% /|<>{}()\[\]&^£!*#~?,`\n]/;
+        const emailCheck = email.length < 3 || email.length > 254 || !email.includes("@") || illegalEmailChars.test(email);
+
+        if (emailCheck) {
+            console.log("check failed");
+            return false;
+        }
+
+        let match = false;
+        
+        try {
+            const lowerEmail = email.toLowerCase();
+            const row = await new Promise((resolve, reject) => {
+                this.db.get(
+                    "SELECT salt, passHash FROM Users WHERE email = ?",
+                    [lowerEmail],
+                    (err, row) => {
+                        if (err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
+            if (!row) {
+                return false;
+            }
+            const { salt, passHash } = row;
+            match = await hash.verify(salt, password, passHash);
+            return match;
+        } catch (err) {
+            console.error("checkLoginInfo failed", err);
+            return false;
+        }
+    }
+
+    async getUserID(email) {
+        try {
+            const row = await new Promise((resolve, reject) => {
+                this.db.get(
+                    "SELECT userID FROM Users WHERE email = ?",
+                    [email],
+                    (err, row) => {
+                        if (err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
+            return row;
+        }
 
 catch (err) {
     console.error("getUserID:", err);
     return { success: false, message: "Database error" };
   }
 }
-
+async getRideshares() {
+  return await new Promise((resolve, reject) => {
+    this.db.all("SELECT userName, d.driverID, d.startID, d.endID, sp.placeID   AS start_placeID, sp.placeName AS start_placeName, sp.latitude  AS start_latitude, sp.longitude AS start_longitude, ep.placeID   AS end_placeID, ep.placeName AS end_placeName, ep.latitude  AS end_latitude, ep.longitude AS end_longitude FROM users join Drivers ON users.userID=Drivers.driverID JOIN DriverCommutes d on Drivers.driverID=d.driverID JOIN VerifiedPlaces sp ON d.startId = sp.placeID JOIN VerifiedPlaces ep ON d.endId = ep.placeID;",
+(err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      }
+    );
+  });
+}
 async checkUserExists(username, email) {
   console.log(username, email);
+
   try {
     const row = await new Promise((resolve, reject) => {
       this.db.get(
@@ -174,71 +187,91 @@ async checkUserExists(username, email) {
         }
       );
     });
+      }    catch (err) {
+            console.error("getUserID:", err);
+            return { success: false, message: "Database error" };
+        }
+    
+  }
 
-    console.log(row);
+    async checkUserExists(username, email) {
+        console.log(username, email);
+        try {
+            const row = await new Promise((resolve, reject) => {
+                this.db.get(
+                    "SELECT email FROM Users WHERE email = ?",
+                    [email.toLowerCase()],
+                    (err, row) => {
+                        if (err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
 
-    if (row) {
-      return { success: false, message: "User already exists" };
-    } else {
-      return { success: true, message: "Adding User..." };
+            console.log(row);
+
+            if (row) {
+                return { success: false, message: "User already exists" };
+            } else {
+                return { success: true, message: "Adding User..." };
+            }
+
+        } catch (err) {
+            console.error("checkUserExists failed:", err);
+            return { success: false, message: "Database error" };
+        }
     }
 
-  } catch (err) {
-    console.error("checkUserExists failed:", err);
-    return { success: false, message: "Database error" };
-  }
-}
+    //generates a token if the user email exists in the SQLite db
+    async generateResetToken(email) {
+        try {
+            const row = await new Promise((resolve, reject) => {
+                this.db.get("SELECT email FROM Users WHERE LOWER(email) = LOWER(?)", [email], (err, row) => {
+                    if (err) return reject(err);
+                    resolve(row);
+                });
+            });
 
-//generates a token if the user email exists in the SQLite db
-  async generateResetToken(email) {
-    try {
-      const row = await new Promise((resolve, reject) => {
-        this.db.get("SELECT email FROM Users WHERE LOWER(email) = LOWER(?)", [email], (err, row) => {
-          if (err) return reject(err);
-          resolve(row);
-        });
-      });
-
-      if (!row) return null;
-      const token = Math.floor(100000 + Math.random() * 900000).toString();
-      this.resetTokens.set(email.toLowerCase(), token);
-      return token;
-    } catch (err) {
-      console.error("generateResetToken error:", err);
-      return null;
+            if (!row) return null;
+            const token = crypto.randomInt(100000, 1000000).toString();
+            this.resetTokens.set(email.toLowerCase(), token);
+            return token;
+        } catch (err) {
+            console.error("generateResetToken error:", err);
+            return null;
+        }
     }
-  }
 
-  //verify if code matches to internal map
-  verifyResetToken(email, token) {
-    const savedToken = this.resetTokens.get(email.toLowerCase());
-    return savedToken && savedToken === token;
-  }
-
-  //updates the passHash and salt columns for a user in the SQLite database
-  async resetUserPasswordWithToken(email, passHash, salt) {
-    try {
-      const result = await new Promise((resolve, reject) => {
-        this.db.run(
-          "UPDATE Users SET passHash = ?, salt = ? WHERE LOWER(email) = LOWER(?)",
-          [passHash, salt, email],
-          function (err) {
-            if (err) return reject(err);
-            resolve(this.changes > 0);
-          }
-        );
-      });
-
-      if (result) {
-        this.resetTokens.delete(email.toLowerCase());
-        return true;
-      }
-      return false;
-    } catch (err) {
-      console.error("resetUserPasswordWithToken error:", err);
-      return false;
+    //verify if code matches to internal map
+    verifyResetToken(email, token) {
+        const savedToken = this.resetTokens.get(email.toLowerCase());
+        return savedToken && savedToken === token;
     }
-  }
+
+    //updates the passHash and salt columns for a user in the SQLite database
+    async resetUserPasswordWithToken(email, passHash, salt) {
+        try {
+            const result = await new Promise((resolve, reject) => {
+                this.db.run(
+                    "UPDATE Users SET passHash = ?, salt = ? WHERE LOWER(email) = LOWER(?)",
+                    [passHash, salt, email],
+                    function (err) {
+                        if (err) return reject(err);
+                        resolve(this.changes > 0);
+                    }
+                );
+            });
+
+            if (result) {
+                this.resetTokens.delete(email.toLowerCase());
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.error("resetUserPasswordWithToken error:", err);
+            return false;
+        }
+    }
 
 }
 

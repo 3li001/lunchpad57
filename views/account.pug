@@ -26,47 +26,74 @@ mixin notifSelect(key, label, desc, value)
                 option(value=n selected=(n === value)) #{n} day#{n === 1 ? '' : 's'}
 
 block content
-    - const prefs = user.getPrefs()
+    - const prefs = user.getPrefs ? user.getPrefs() : {}
     div#Account
         div#AccountHeader
-            div.account-name #{user.getName()}
-            div.account-email #{user.getEmail()}
+            div.account-avatar
+                i.fa-solid.fa-user
+            div.account-header-info
+                div.account-name #{user.getName()}
+                div.account-email #{user.getEmail()}
+                if driver
+                    span.role-badge.role-badge--driver
+                        i.fa-solid.fa-car
+                        |  Driver
+                else
+                    span.role-badge.role-badge--user
+                        i.fa-solid.fa-person
+                        |  Passenger
 
         div.account-tabs
             button.account-tab.active(data-tab="ProfilePane") Profile
-            button.account-tab(data-tab="NotificationsPane") Notifications
+            button.account-tab(data-tab="DriverPane") Driver
             button.account-tab(data-tab="SecurityPane") Security
 
         div#ProfilePane.tab-pane.active
             div.content-section
-                div.section-title Personal details
+                div.section-title Personal Details
                 +fieldRow('field-name', 'Name', user.getName())
                 +fieldRow('field-email', 'Email', user.getEmail(), 'email')
 
-        div#NotificationsPane.tab-pane
-            div.content-section
-                div.section-title Email reminders
-                p.notif-info
-                    | We'll email #{user.getEmail()} when something needs your attention. Reminders only go out when a deadline is inside your warning window, and we won't send the same reminder twice in one day.
-
-                +notifToggle('autoEmailNotifications', 'Auto email reminders', 'Master switch for all reminder emails.', prefs.autoEmailNotifications)
-                +notifSelect('reminderDays', 'Deadline warning window', 'Only remind me when something is this close to its deadline.', prefs.reminderDays)
-                +notifSelect('activityLogDays', 'Activity log gap', "Remind me if I haven't logged progress on a task for this many days.", prefs.activityLogDays)
-                +notifToggle('notifyUpcoming', 'Upcoming assessments', 'When an assessment is due soon.', prefs.notifyUpcoming)
-                +notifToggle('notifyMilestones', 'Upcoming milestones', 'When a milestone is due soon.', prefs.notifyMilestones)
-                +notifToggle('notifyActivityLog', 'Activity logging reminders', "When I haven't logged progress in a while.", prefs.notifyActivityLog)
-                +notifToggle('notifyMissed', 'Missed deadlines', "If a deadline has passed and stuff is still unfinished.", prefs.notifyMissed)
-
-                div.notif-save-state#NotificationSaveState Saved automatically
-
-            div.content-section
-                div.section-title Current reminders
-                p.notif-info Things that would trigger an email right now.
-                div#NotificationPreview.notif-preview Loading...
+        div#DriverPane.tab-pane
+            if driver && vehicle
+                div.content-section
+                    div.section-title Driver Status
+                    div.driver-status-card
+                        div.driver-status-icon
+                            i.fa-solid.fa-car.fa-2x
+                        div.driver-status-info
+                            div.driver-status-title You are registered as a driver
+                            div.driver-status-sub #{driver.completedRides} completed ride#{driver.completedRides === 1 ? '' : 's'}
+                div.content-section
+                    div.section-title Your Vehicle
+                    div.field-row
+                        span.field-label Make
+                        span.field-value #{vehicle.vehicleMake}
+                    div.field-row
+                        span.field-label Model
+                        span.field-value #{vehicle.vehicleModel}
+                    div.field-row
+                        span.field-label Year
+                        span.field-value #{vehicle.vehicleYear}
+                    div.field-row
+                        span.field-label MPG
+                        span.field-value #{vehicle.mpg}
+                    div.field-row
+                        span.field-label Number Plate
+                        span.field-value #{driver.numberPlate}
+            else
+                div.content-section
+                    div.driver-cta
+                        div.driver-cta-icon
+                            i.fa-solid.fa-car.fa-2x
+                        div.driver-cta-text
+                            div.driver-cta-title Not registered as a driver
+                            div.driver-cta-sub Want to offer rides? Register your vehicle and start driving.
+                        a.btn.btn-primary(href="/driver/register") Become a Driver
 
         div#SecurityPane.tab-pane
             div.content-section
-                div.section-title Change password
+                div.section-title Change Password
                 div.field-row.editing
                     span.field-label Current
                     span.field-value: input(type="password" placeholder="Current password")
@@ -77,9 +104,9 @@ block content
                     span.field-label Confirm
                     span.field-value: input(type="password" placeholder="Confirm new password")
                 div.action-row
-                    button.btn.btn-primary(onclick="changePassword()") Update password
+                    button.btn.btn-primary(onclick="changePassword()") Update Password
             div.content-section.danger-zone
-                div.section-title Danger zone
+                div.section-title Danger Zone
                 div.field-row
                     span.field-value Permanently delete your account and all associated data.
-                    button.btn.btn-danger(onclick="deleteAccount()") Delete account
+                    button.btn.btn-danger(onclick="deleteAccount()") Delete Account

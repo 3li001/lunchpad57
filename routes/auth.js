@@ -1,18 +1,16 @@
 const route = require("@lib/createRoute")("/auth")
-const { getDatabase } = require("../lib/devDatabase")
 const { sendEmail } = require("../lib/emailService.js");
-const bcrypt = require("bcryptjs")
 const connect = require("../dbConnect.js");
-// Could maybe put together an auth config with this
-const SALT_ROUNDS = 10
 
 route.router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
+
     if (!name || !email || !password) {
         return res.status(400).json({
             message: "Missing fields."
         });
     }
+    
     try {
         const exists = await connect.checkUserExists(name, email);
 
@@ -21,16 +19,19 @@ route.router.post("/register", async (req, res) => {
                 message: exists.message
             });
         }
+
         const result = await connect.addUser(name, email, password);
         if (!result.success) {
             return res.status(500).json({
                 message: result.message
             });
         }
+
         return res.status(201).json({
             message: "Account created."
         });
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             message: "There was a problem creating your account."
@@ -48,18 +49,17 @@ route.router.post("/login", async (req, res) => {
     try {
         let login = await connect.checkLoginInfo(email, password);
 
-    console.log(login);
-    
-    // storing the users session info
-    if (login) {
-     req.session.user_id = connect.getUserID(email);
-
-        res.json({ message: "Logged in!" })
-    }
+        console.log(login);
         
-
-        
-    }
+        // storing the users session info
+        if (login) {
+            req.session.user_id = await connect.getUserID(email);
+            res.json({ message: "Logged in!" })
+        }
+        else {
+            res.status(401).json({ message: "Invalid email or password." })
+        }
+    }   
     catch (error) {
         console.error(error)
         res.status(500).json({ message: "There was a problem logging you in, try again later." })
@@ -133,7 +133,7 @@ route.router.post("/reset-password", async (req, res) => {
         const passwordHashLib = require("../passwordHash.js");
         
         // 3. Generate a fresh 32-character random salt
-        const newSalt = passwordHashLib.saltGen();
+        const newSalt = await passwordHashLib.saltGen();
         
         // 4. Pass the salt first, plainText password second
         const pass_hash = await passwordHashLib.passwordHash(newSalt, password);

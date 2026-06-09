@@ -20,13 +20,18 @@ document.addEventListener("DOMContentLoaded", (e) => {
     BURGER_NAV = document.querySelector("#BurgerNav")
     BURGER_NAV_BUTTON = document.querySelector("#BurgerNavButton")
 
-    document.querySelector("#NavProfile").addEventListener("click", e => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleAccountPanel()
-    })
+    const navProfile = document.querySelector("#NavProfile")
+    if (navProfile && ACCOUNT_PANEL) {
+        navProfile.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleAccountPanel()
+        })
+    }
 
-    BURGER_NAV_BUTTON.addEventListener("click", () => {
-        BURGER_NAV.classList.toggle("open")
-    })
+    if (BURGER_NAV_BUTTON) {
+        BURGER_NAV_BUTTON.addEventListener("click", () => {
+            BURGER_NAV.classList.toggle("open")
+        })
+    }
 })

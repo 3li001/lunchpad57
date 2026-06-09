@@ -1,7 +1,11 @@
 const route = require("@lib/createRoute")("/")
-const rideshares = require("../tmp_data/rideshares.json")
+const connect =require("../dbConnect.js");
+//const rideshares = require("../tmp_data/rideshares.json")
 
 route.router.get("/", async (req, res) => {
+     const rideshares = await connect.getRideshares();
+    //console.log(rideshares);
+        
     res.render("index", {
         title: "RideShare",
         scripts: ["/scripts/modal.js", "/pages/homePage.js"],

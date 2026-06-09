@@ -429,7 +429,7 @@ footer {
         color: #fff !important;
     }
 
-    p, h1, h2, h3, h4, h5, h6, a, li {
+    p, h1, h2, h3, h4, h5, h6, a, li, span {
         cursor: pointer !important;
         border-radius: var(--radius-sm);
         transition:
@@ -445,7 +445,8 @@ footer {
     h5:hover,
     h6:hover,
     a:hover,
-    li:hover {
+    li:hover,
+    span:hover {
         outline: 2px solid #f59e0b !important;
         outline-offset: 3px;
         background-color: rgba(245, 158, 11, 0.12) !important;
@@ -971,6 +972,285 @@ footer {
     .section-title {
         color: #c0392b;
         opacity: 1;
+    }
+}
+
+/*
+    Account Page
+*/
+
+#Account {
+    max-width: 680px;
+    margin: 2em auto;
+    padding: 0 1em;
+}
+
+#AccountHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.25em;
+    padding: 1.5em 1.5em 1.25em;
+    background: var(--col-primary);
+    border: 1.5px solid rgba(var(--col-secondary-rgb), 0.1);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.25em;
+    box-shadow: var(--shadow-md);
+}
+
+.account-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(var(--col-tertiary-rgb), 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--col-tertiary);
+    flex-shrink: 0;
+}
+
+.account-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.account-name {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--col-txt-primary);
+}
+
+.account-email {
+    font-size: 0.875em;
+    opacity: 0.6;
+    color: var(--col-txt-primary);
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: 0.75em;
+    font-weight: 600;
+    padding: 0.25em 0.75em;
+    border-radius: 999px;
+    margin-top: 0.25em;
+    width: fit-content;
+}
+
+.role-badge--driver {
+    background: rgba(var(--col-tertiary-rgb), 0.15);
+    color: var(--col-tertiary);
+    border: 1px solid rgba(var(--col-tertiary-rgb), 0.3);
+}
+
+.role-badge--user {
+    background: rgba(var(--col-secondary-rgb), 0.08);
+    color: var(--col-txt-primary);
+    border: 1px solid rgba(var(--col-secondary-rgb), 0.15);
+    opacity: 0.7;
+}
+
+.account-tabs {
+    display: flex;
+    gap: 0.25em;
+    margin-bottom: 1em;
+    border-bottom: 1.5px solid rgba(var(--col-secondary-rgb), 0.1);
+    padding-bottom: 0;
+}
+
+.account-tab {
+    background: none;
+    border: none;
+    padding: 0.6em 1.1em;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--col-txt-primary);
+    opacity: 0.5;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+    transition: opacity var(--transition-fast), border-color var(--transition-fast);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+
+    &:hover { opacity: 0.85; }
+    &.active {
+        opacity: 1;
+        border-bottom-color: var(--col-tertiary);
+        font-weight: 600;
+    }
+}
+
+.tab-pane {
+    display: none;
+    &.active { display: block; }
+}
+
+.field-row {
+    display: flex;
+    align-items: center;
+    padding: 0.7em 1.25em;
+    border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.07);
+    gap: 1em;
+
+    &:last-child { border-bottom: none; }
+
+    .field-label {
+        font-size: 0.82em;
+        font-weight: 600;
+        opacity: 0.55;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        min-width: 110px;
+    }
+
+    .field-value {
+        flex: 1;
+        font-size: 0.95em;
+
+        input {
+            width: 100%;
+            padding: 0.4em 0.65em;
+            border: 1.5px solid rgba(var(--col-secondary-rgb), 0.15);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1em;
+            background: rgba(var(--col-secondary-rgb), 0.06);
+            outline: none;
+
+            &:focus { border-color: var(--col-tertiary); }
+        }
+    }
+
+    .edit-btn {
+        font-size: 0.8em;
+        font-weight: 600;
+        padding: 0.3em 0.8em;
+        border-radius: var(--radius-sm);
+        background: none;
+        border: 1px solid rgba(var(--col-secondary-rgb), 0.2);
+        cursor: pointer;
+        color: var(--col-txt-primary);
+        opacity: 0.6;
+        transition: opacity var(--transition-fast), border-color var(--transition-fast);
+
+        &:hover {
+            opacity: 1;
+            border-color: var(--col-tertiary);
+            color: var(--col-tertiary);
+        }
+    }
+}
+
+/* Driver status card (when registered) */
+.driver-status-card {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 1.25em;
+}
+
+.driver-status-icon {
+    color: var(--col-tertiary);
+    opacity: 0.9;
+}
+
+.driver-status-title {
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.driver-status-sub {
+    font-size: 0.82em;
+    opacity: 0.55;
+    margin-top: 0.2em;
+}
+
+/* Driver CTA (when not registered) */
+.driver-cta {
+    display: flex;
+    align-items: center;
+    gap: 1.25em;
+    padding: 1.25em 1.25em;
+    flex-wrap: wrap;
+}
+
+.driver-cta-icon {
+    color: var(--col-txt-primary);
+    opacity: 0.25;
+    flex-shrink: 0;
+}
+
+.driver-cta-text {
+    flex: 1;
+    min-width: 160px;
+}
+
+.driver-cta-title {
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.driver-cta-sub {
+    font-size: 0.82em;
+    opacity: 0.55;
+    margin-top: 0.2em;
+}
+
+/* notification rows */
+.notif-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75em 1.25em;
+    border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.07);
+    gap: 1em;
+
+    &:last-child { border-bottom: none; }
+}
+
+.notif-label { font-size: 0.9em; font-weight: 500; }
+.notif-desc  { font-size: 0.8em; opacity: 0.5; margin-top: 0.15em; }
+.notif-info  { font-size: 0.85em; opacity: 0.6; padding: 0 1.25em 0.5em; margin: 0; }
+
+.notif-select {
+    padding: 0.3em 0.5em;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid rgba(var(--col-secondary-rgb), 0.15);
+    background: rgba(var(--col-secondary-rgb), 0.06);
+    font-family: inherit;
+    font-size: 0.9em;
+    color: var(--col-txt-primary);
+    cursor: pointer;
+}
+
+.notif-save-state {
+    font-size: 0.78em;
+    opacity: 0.4;
+    padding: 0.5em 1.25em 0;
+    &.is-error { color: #c0392b; opacity: 1; }
+}
+
+.notif-preview {
+    padding: 0.5em 1.25em 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.content-section {
+    background: var(--col-primary);
+    border: 1.5px solid rgba(var(--col-secondary-rgb), 0.1);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1em;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+
+    > .section-title {
+        padding: 0.85em 1.25em 0.65em;
+        margin: 0;
+        border-bottom: 1px solid rgba(var(--col-secondary-rgb), 0.08);
     }
 }
 
@@ -1645,6 +1925,7 @@ main:has(#RideLayout) {
     /* padding: 0.35em 0; */
     background: var(--col-primary);
     border-radius: var(--radius-lg);
+    max-height: 700px;
 }
 
 .ride-card {

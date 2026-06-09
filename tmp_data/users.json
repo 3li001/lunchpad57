@@ -10,5 +10,81 @@
         "name": "John Dover",
         "email": "JohnDover@gmail.com",
         "password": "$2b$10$vXVC7gqTNkDE62GOicoBcOv8kLpuQedIzh2UtvpW214lvB5dozyoS"
+        "id": 3,
+        "name": "Bob",
+        "email": "ali@test.com",
+        "password": "new_hash"
+    },
+    {
+        "id": 4,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash123"
+    },
+    {
+        "id": 5,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash123"
+    },
+    {
+        "id": 6,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "h1"
+    },
+    {
+        "id": 7,
+        "name": "Bob",
+        "email": "bob@test.com",
+        "password": "h2"
+    },
+    {
+        "id": 8,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash"
+    },
+    {
+        "id": 9,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash"
+    },
+    {
+        "id": 10,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash"
+    },
+    {
+        "id": 11,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "h1"
+    },
+    {
+        "id": 12,
+        "name": "Bob",
+        "email": "bob@test.com",
+        "password": "h2"
+    },
+    {
+        "id": 13,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "hash"
+    },
+    {
+        "id": 14,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "old_hash"
+    },
+    {
+        "id": 15,
+        "name": "Ali",
+        "email": "ali@test.com",
+        "password": "old_hash"
     }
 ]
