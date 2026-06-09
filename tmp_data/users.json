@@ -10,6 +10,8 @@
         "name": "John Dover",
         "email": "JohnDover@gmail.com",
         "password": "$2b$10$vXVC7gqTNkDE62GOicoBcOv8kLpuQedIzh2UtvpW214lvB5dozyoS"
+    },
+    {
         "id": 3,
         "name": "Bob",
         "email": "ali@test.com",
