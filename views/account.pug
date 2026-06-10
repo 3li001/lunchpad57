@@ -64,6 +64,9 @@ block content
                         div.driver-status-info
                             div.driver-status-title You are registered as a driver
                             div.driver-status-sub #{driver.completedRides} completed ride#{driver.completedRides === 1 ? '' : 's'}
+                        a.btn.btn-primary(href="/driver/routes")
+                            i.fa-solid.fa-route
+                            |  View Routes
                 div.content-section
                     div.section-title Your Vehicle
                     div.field-row
