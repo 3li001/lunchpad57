@@ -2355,7 +2355,7 @@ main:has(#RideLayout) {
     display: flex;
     flex-direction: column;
     padding: 1.4rem 1.2rem;
-    overflow-y: auto;
+    overflow-y: hidden;
     border-right: 1px solid rgba(var(--col-secondary-rgb), 0.1);
     background-color: var(--col-primary);
 }
@@ -2413,11 +2413,15 @@ main:has(#RideLayout) {
 
 .field-row {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    padding: 0;
+    align-items: stretch;
+    border-bottom: none;
 }
 
 .field-row .field {
     flex: 1;
+    min-width: 0;
 }
 
 #CreateRouteForm .form-actions {
