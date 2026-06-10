@@ -2413,11 +2413,15 @@ main:has(#RideLayout) {
 
 .field-row {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    padding: 0;
+    align-items: stretch;
+    border-bottom: none;
 }
 
 .field-row .field {
     flex: 1;
+    min-width: 0;
 }
 
 #CreateRouteForm .form-actions {
