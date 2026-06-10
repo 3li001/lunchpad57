@@ -111,6 +111,19 @@ route.router.post("/addCommute", async (req,res)=>{
     }
 
 });
+
+route.router.post("/getDriver", async (req,res)=>{
+    try{
+        console.log(req.body.driver);
+        console.log(req.body.driver);
+        const driver = await connect.getDriverDriverID(Number(req.body.driver));
+        res.json(driver);   
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message:"There was a problem getting driver"});
+    }
+})
+
 route.router.post("/addDriver", async (req,res)=>{
     const vehicleMake=String(req.body.make);
     const vehicleModel=String(req.body.model);

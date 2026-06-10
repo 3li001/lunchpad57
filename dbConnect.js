@@ -176,6 +176,23 @@ class Connect {
             return{success:false, message: "Database error"};
         }
     }
+    async getDriverDriverID(driverID){
+        try{
+            const row=await new Promise((resolve,reject)=>{
+                this.db.get("Select * FROM Drivers JOIN Vehicles on drivers.vehicleID=Vehicles.vehicleID Where driverID=?",[driverID],
+                    (err,row)=>{
+                        if(err) return reject(err);
+                        resolve(row);
+                    }
+                );
+            });
+            return row;
+        }
+        catch(err){
+            console.error("getDriver:",err);
+            return{success:false, message: "Database error"};
+        }
+    }
 async getVehicleID(make,model,year){
     try{
         const row=await new Promise((resolve,reject)=>{

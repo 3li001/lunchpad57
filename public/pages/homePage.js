@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async() => {
         });
     }
 
-    function showDetail(ride) {
+   async function showDetail(ride) {
         selectedRide = ride;
         const stops = [
                 {
@@ -116,12 +116,21 @@ document.addEventListener("DOMContentLoaded", async() => {
                     time:"09:30"
                 }
             ];
+            console.log(ride.driverID);
+            const res23 = await fetch("/auth/getDriver", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({driver: ride.driverID})
+            })
+
+            const data = await res23.json()
+            console.log(data);
         console.log(stops);
         document.getElementById("RideList").style.display = "none";
         document.getElementById("RideDetail").style.display = "flex";
 
         document.getElementById("DetailDriverName").textContent = ride.userName;
-        document.getElementById("DetailDriverCar").textContent = "Volksawagon | AGSGAS"//`${ride.car_model} | ${ride.registration}`
+        document.getElementById("DetailDriverCar").textContent = data.vehicleMake+" "+data.vehicleModel+" | "+data.numberplate//`${ride.car_model} | ${ride.registration}`
         document.getElementById("DetailFrom").textContent = ride.start_placeName;
         document.getElementById("DetailTo").textContent = ride.end_placeName;
         document.getElementById("DetailTime").textContent = " Departs " //+ ride.start_time;
