@@ -16,18 +16,15 @@ block content
             if routes && routes.length
                 div#RouteListItems
                     each route in routes
-                        div.route-card(data-id=route.id data-start=route.start_location data-end=route.end_location)
+                        div.route-card(data-id=route.id data-start=route.startPlace data-end=route.endPlace)
                             div.rc-route
-                                span.rc-from= route.start_location
+                                span.rc-from= route.startPlace
                                 i.fa-solid.fa-chevron-right
-                                span.rc-to= route.end_location
+                                span.rc-to= route.endPlace
                             div.rc-meta
                                 span.rc-pill
                                     i.fa-regular.fa-clock
-                                    |  #{route.start_time}
-                                span.rc-pill
-                                    i.fa-solid.fa-map-pin
-                                    |  #{route.stops ? route.stops.length : 0} stop#{route.stops && route.stops.length === 1 ? '' : 's'}
+                                    |  12
                                 div.rc-seats
                                     span.rc-seats-n= route.seats
                                     span.rc-seats-l seats

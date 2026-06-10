@@ -16,9 +16,9 @@ route.router.post("/", async (req, res) => {
 
     const { start_location, end_location, start_time, seats, stops } = req.body
 
-    const stops_array = stops
-        ? stops.split("\n").map(s => s.trim()).filter(Boolean)
-        : []
+   // const stops_array = stops
+     //   ? stops.split("\n").map(s => s.trim()).filter(Boolean)
+       // : []
 
     await db.createRoute({
         user_id,
@@ -26,7 +26,7 @@ route.router.post("/", async (req, res) => {
         end_location,
         start_time,
         seats: parseInt(seats),
-        stops: stops_array
+        //stops: stops_array
     })
 
     res.redirect("/driver/routes")

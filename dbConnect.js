@@ -261,9 +261,84 @@ async getVehicleYears(model){
         );
     });
 }
+async getPlaces(){
+    return await new Promise((resolve, reject)=>{
+        this.db.all("SELECT * FROM verifiedPlaces",
+        (err,row)=>{
+            if(err) return reject(err);
+            resolve(row);
+        }
+    );
+    });
+}
+async getPlaces2(place){
+    return await new Promise((resolve, reject)=>{
+        this.db.all("SELECT * FROM verifiedPlaces WHERE placeName!=?",[place],
+        (err,row)=>{
+            if(err) return reject(err);
+            resolve(row);
+        }
+    );
+    });
+}
+async getPlaceID(place){
+    return await new Promise((resolve,reject)=>{
+        this.db.get("SELECT placeID FROM verifiedPlaces WHERE placeName=?",[place],
+            (err,row)=>{
+                if(err) return reject(err);
+                resolve(row);
+            }
+        );
+    });
+}
+
+
+
+async getCoords(place){
+    return await new Promise((resolve, reject)=>{
+        this.db.get("SELECT latitude, longitude FROM verifiedPlaces WHERE placeName=?",[place],
+        (err,row)=>{
+            if(err) return reject(err);
+            resolve(row);
+        }
+    );
+    });
+}
+async getDriverID(userID){
+    return await new Promise((resolve, reject)=>{
+        this.db.get("SELECT driverID FROM drivers WHERE userID=?",[userID],
+            (err,row)=>{
+                if(err) return reject(err);
+                resolve(row);
+            }
+        )
+    })
+}
+async addCommute(driverID, startID, endID){
+    return await new Promise((resolve, reject)=>{
+        this.db.get("INSERT INTO driverCommutes(driverID,startID,endID) VALUES (?,?,?)",[driverID,startID,endID],
+            (err,row)=>{
+                if(err) return reject(err);
+                resolve(row);
+            }
+        )
+    })
+}
+async getDriverRoutes(userID){
+return await new Promise((resolve, reject)=>{
+    this.db.all("SELECT dc.startID, dc.endID, placeStart.placeName AS startPlace, placeEnd.placeName AS endPlace FROM users u JOIN drivers d ON u.userID = d.userID JOIN drivercommutes dc ON d.driverID = dc.driverID JOIN VerifiedPlaces placeStart ON dc.startID = placeStart.placeID JOIN VerifiedPlaces placeEnd ON dc.endID = placeEnd.placeID WHERE u.userID = ?",[userID],
+        (err,row)=>{
+            if(err) return reject(err);
+            resolve(row);
+        }
+
+    );
+});
+}
+
 async getRideshares() {
   return await new Promise((resolve, reject) => {
-    this.db.all("SELECT userName, d.driverID, d.startID, d.endID, sp.placeID   AS start_placeID, sp.placeName AS start_placeName, sp.latitude  AS start_latitude, sp.longitude AS start_longitude, ep.placeID   AS end_placeID, ep.placeName AS end_placeName, ep.latitude  AS end_latitude, ep.longitude AS end_longitude FROM users join Drivers ON users.userID=Drivers.driverID JOIN DriverCommutes d on Drivers.driverID=d.driverID JOIN VerifiedPlaces sp ON d.startId = sp.placeID JOIN VerifiedPlaces ep ON d.endId = ep.placeID;",
+    this.db.all("SELECT userName, d.driverID, d.startID, d.endID, sp.placeID   AS start_placeID, sp.placeName AS start_placeName, sp.latitude  AS start_latitude, sp.longitude AS start_longitude, ep.placeID   AS end_placeID, ep.placeName AS end_placeName, ep.latitude  AS end_latitude, ep.longitude AS end_longitude FROM users join Drivers ON users.userID=Drivers.userID JOIN DriverCommutes d on Drivers.driverID=d.driverID JOIN VerifiedPlaces sp ON d.startId = sp.placeID JOIN VerifiedPlaces ep ON d.endId = ep.placeID;",
 (err, rows) => {
         if (err) return reject(err);
         resolve(rows);

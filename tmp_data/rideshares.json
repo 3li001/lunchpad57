@@ -9,13 +9,62 @@
         "start_time": "09:00",
         "seats_available": 3,
         "stops": [
-            { "name": "Norwich City Centre",   "coords": [52.628571,  1.2921  ], "time": "09:00" },
-            { "name": "Castle Meadow",         "coords": [52.629223,  1.295769], "time": "09:04" },
-            { "name": "Magdalen Street",       "coords": [52.634434,  1.296622], "time": "09:09" },
-            { "name": "Catton Grove Road",     "coords": [52.652886,  1.293011], "time": "09:16" },
-            { "name": "Hellesdon",             "coords": [52.664652,  1.26349 ], "time": "09:23" },
-            { "name": "Drayton Road",          "coords": [52.651739,  1.26192 ], "time": "09:30" },
-            { "name": "Norwich Airport",       "coords": [52.67646,   1.281816], "time": "09:45" }
+            {
+                "name": "Norwich City Centre",
+                "coords": [
+                    52.628571,
+                    1.2921
+                ],
+                "time": "09:00"
+            },
+            {
+                "name": "Castle Meadow",
+                "coords": [
+                    52.629223,
+                    1.295769
+                ],
+                "time": "09:04"
+            },
+            {
+                "name": "Magdalen Street",
+                "coords": [
+                    52.634434,
+                    1.296622
+                ],
+                "time": "09:09"
+            },
+            {
+                "name": "Catton Grove Road",
+                "coords": [
+                    52.652886,
+                    1.293011
+                ],
+                "time": "09:16"
+            },
+            {
+                "name": "Hellesdon",
+                "coords": [
+                    52.664652,
+                    1.26349
+                ],
+                "time": "09:23"
+            },
+            {
+                "name": "Drayton Road",
+                "coords": [
+                    52.651739,
+                    1.26192
+                ],
+                "time": "09:30"
+            },
+            {
+                "name": "Norwich Airport",
+                "coords": [
+                    52.67646,
+                    1.281816
+                ],
+                "time": "09:45"
+            }
         ]
     },
     {
@@ -28,13 +77,121 @@
         "start_time": "19:00",
         "seats_available": 4,
         "stops": [
-            { "name": "Norwich Airport",       "coords": [52.67646,   1.281816], "time": "09:45" },
-            { "name": "Drayton Road",          "coords": [52.651739,  1.26192 ], "time": "09:30" },
-            { "name": "Hellesdon",             "coords": [52.664652,  1.26349 ], "time": "09:23" },
-            { "name": "Catton Grove Road",     "coords": [52.652886,  1.293011], "time": "09:16" },
-            { "name": "Magdalen Street",       "coords": [52.634434,  1.296622], "time": "09:09" },
-            { "name": "Castle Meadow",         "coords": [52.629223,  1.295769], "time": "09:04" },
-            { "name": "Norwich City Centre",   "coords": [52.628571,  1.2921  ], "time": "09:00" }
+            {
+                "name": "Norwich Airport",
+                "coords": [
+                    52.67646,
+                    1.281816
+                ],
+                "time": "09:45"
+            },
+            {
+                "name": "Drayton Road",
+                "coords": [
+                    52.651739,
+                    1.26192
+                ],
+                "time": "09:30"
+            },
+            {
+                "name": "Hellesdon",
+                "coords": [
+                    52.664652,
+                    1.26349
+                ],
+                "time": "09:23"
+            },
+            {
+                "name": "Catton Grove Road",
+                "coords": [
+                    52.652886,
+                    1.293011
+                ],
+                "time": "09:16"
+            },
+            {
+                "name": "Magdalen Street",
+                "coords": [
+                    52.634434,
+                    1.296622
+                ],
+                "time": "09:09"
+            },
+            {
+                "name": "Castle Meadow",
+                "coords": [
+                    52.629223,
+                    1.295769
+                ],
+                "time": "09:04"
+            },
+            {
+                "name": "Norwich City Centre",
+                "coords": [
+                    52.628571,
+                    1.2921
+                ],
+                "time": "09:00"
+            }
         ]
+    },
+    {
+        "id": 3,
+        "user_id": {
+            "userID": 7
+        },
+        "start_location": "City centre",
+        "end_location": "Norwich Airport",
+        "start_time": "09:00",
+        "seats": 2,
+        "stops": [
+            "University of East Anglia",
+            "Felixstowe",
+            "Brussels",
+            "New York",
+            "Moscow",
+            "Tumaco"
+        ],
+        "created_at": "2026-06-10T13:03:29.776Z"
+    },
+    {
+        "id": 4,
+        "user_id": {
+            "userID": 7
+        },
+        "start_time": "09:00",
+        "seats": 3,
+        "stops": [],
+        "created_at": "2026-06-10T16:10:46.746Z"
+    },
+    {
+        "id": 5,
+        "user_id": {
+            "userID": 7
+        },
+        "start_time": "09:00",
+        "seats": 3,
+        "stops": [],
+        "created_at": "2026-06-10T16:10:58.483Z"
+    },
+    {
+        "id": 6,
+        "user_id": {
+            "userID": 7
+        },
+        "start_time": "09:00",
+        "seats": 5,
+        "stops": [],
+        "created_at": "2026-06-10T16:11:40.676Z"
+    },
+    {
+        "id": 7,
+        "user_id": {
+            "userID": 7
+        },
+        "start_time": "09:00",
+        "seats": 3,
+        "stops": [],
+        "created_at": "2026-06-10T16:12:08.649Z"
     }
 ]

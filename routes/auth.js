@@ -66,6 +66,51 @@ route.router.post("/getVehicleYears", async (req,res)=>{
         res.status(500).json({message: "There was a problem getting vehicle makes"});
     }
 })
+route.router.post("/getPlaces", async (req,res)=>{
+    try{
+        const places=await connect.getPlaces();
+         res.json(places);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting places"});
+    }
+})
+route.router.post("/getPlaces2", async (req,res)=>{
+    try{
+        const places=await connect.getPlaces2(req.body.start);
+         res.json(places);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting places"});
+    }
+})
+route.router.post("/getCoords", async (req,res)=>{
+    try{
+        const coords=await connect.getCoords(req.body.place)
+        res.json(coords);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "There was a problem getting coords"});
+    }
+})
+route.router.post("/addCommute", async (req,res)=>{
+    try{
+        const driverID=await connect.getDriverID(req.session.user_id?.userID);
+        const startID=await connect.getPlaceID(req.body.start);
+        const endID=await connect.getPlaceID(req.body.end);
+  
+        //they get returned as objects
+        const commute=await connect.addCommute(driverID.driverID,startID.placeID,endID.placeID);
+        return res.status(200).json({
+    success: true,
+    message: "Route regestered!"
+});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message:"There was a problem adding commute"});
+    }
+
+});
 route.router.post("/addDriver", async (req,res)=>{
     const vehicleMake=String(req.body.make);
     const vehicleModel=String(req.body.model);
@@ -90,14 +135,15 @@ route.router.post("/addDriver", async (req,res)=>{
             console.error(error);
             res.status(500).json({message:"There was a proble adding driver, try again later"});
         }
+        return res.status(200).json({
+            success: true,
+            message: "You're now registered as a driver!"
+        });
     }catch(error){
         console.error(error);
         res.status(500).json({message:"There was a problem getting vehicle, try again later"})
     }
-   return res.status(200).json({
-    success: true,
-    message: "You're now registered as a driver!"
-});
+   
     
 })
 route.router.post("/login", async (req, res) => {
