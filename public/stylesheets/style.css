@@ -2355,7 +2355,7 @@ main:has(#RideLayout) {
     display: flex;
     flex-direction: column;
     padding: 1.4rem 1.2rem;
-    overflow-y: auto;
+    overflow-y: hidden;
     border-right: 1px solid rgba(var(--col-secondary-rgb), 0.1);
     background-color: var(--col-primary);
 }

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const map = L.map("Map").setView([52.6309, 1.2974], 12)
+    const map = L.map("Map").setView([52.4862, -1.8904], 12)
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors"
