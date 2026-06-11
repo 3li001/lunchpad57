@@ -2260,12 +2260,13 @@ main:has(#RideLayout) {
         left: 0;
         padding: 0.5em;
         /* height: 1em; */
-        background-color: var(--col-primary);
+        background-color: var(--col-tertiary);
         anchor-name: --nav;
 
         #BurgerNavButton {
             float: right;
             background-color: transparent !important;
+            color: var(--col-txt-tertiary) !important;
         }
 
         #BurgerNav {
@@ -2285,7 +2286,7 @@ main:has(#RideLayout) {
             display: flex;
             flex-direction: column;
             width: 100%;
-            z-index: 1;
+            z-index: 10001;
 
             > a {
                 padding: 0.75em 1.25em;
