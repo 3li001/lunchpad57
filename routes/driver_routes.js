@@ -6,7 +6,7 @@ route.router.get("/", async (req, res) => {
     const db = getDatabase()
 console.log(user_id);
     //const routes = await db.getDriverRoutes(user_id)
-    const routes = await connect.getDriverRoutes(user_id);
+    const routes = await connect.getDriverRideshares(user_id)
     console.log(routes);
     res.render("driver_routes", {
         title: "My Routes",
