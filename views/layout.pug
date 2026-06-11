@@ -56,8 +56,12 @@ html(lang="en")
                             button#TTSSelect Select Text
                             button#TTSReadPage Read Page
             div#NavAccount
-                a#NavProfile(href="/account" title="Account")
+                a#NavProfile
                     i.fa-solid.fa-user.fa-xl
+                div#NavAccountPanel(hidden)
+                    a(href="/account") Account
+                    //- a(href="/settings") Settings
+                    a(href="/auth/logout") Sign Out
 
         //- nav#BurgerNavContainer
         //-     div

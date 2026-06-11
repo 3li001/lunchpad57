@@ -16,17 +16,17 @@ block content
             if routes && routes.length
                 div#RouteListItems
                     each route in routes
-                        div.route-card(data-id=route.id data-start=route.startPlace data-end=route.endPlace)
+                        div.route-card(data-id=route.id data-start=route.start_placeName data-end=route.end_placeName)
                             div.rc-route
-                                span.rc-from= route.startPlace
+                                span.rc-from= route.start_placeName
                                 i.fa-solid.fa-chevron-right
-                                span.rc-to= route.endPlace
+                                span.rc-to= route.end_placeName
                             div.rc-meta
                                 span.rc-pill
                                     i.fa-regular.fa-clock
                                     |  12
                                 div.rc-seats
-                                    span.rc-seats-n= route.seats
+                                    span.rc-seats-n= route.seats || 2
                                     span.rc-seats-l seats
             else
                 div#NoRoutes
@@ -36,3 +36,6 @@ block content
 
         div#DriverRoutesMap
             div#Map
+    
+    script.
+        const routeData = !{JSON.stringify(routes || [])};
