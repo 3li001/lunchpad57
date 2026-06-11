@@ -22,42 +22,41 @@ block content
 
                 div.ride-card-list
                     each ride in rideshares
-                        -
-                            const stops = [{name: ride.start_placeName, coords: [ride.start_latitude, ride.start_longitude], time: "09:00"},{name: ride.end_placeName, coords: [ride.end_latitude, ride.end_longitude], time: "09:00"}];
-
+                        - const stops = [{name: ride.start_placeName, coords: [ride.start_latitude, ride.start_longitude], time: "09:00"},{name: ride.end_placeName, coords: [ride.end_latitude, ride.end_longitude], time: "09:00"}];
                         div.ride-card(data-id=ride.driverID data-search-text=([ride.start_placeName, ride.end_placeName, ride.userName].concat(stops.map(s => s.name)).join(" ").toLowerCase()))
-                                    div.ride-card-info
-                                        div.ride-card-route
-                                            span.ride-from= ride.start_placeName
-                                                i.fa-solid.fa-chevron-right
-                                                span.ride-to= ride.end_placeName
-                                        div.ride-card-details
-                                                span.ride-driver
-                                                i.fa-solid.fa-user
-                                                |  #{ride.userName}
-                                                span.ride-time
-                                                i.fa-regular.fa-clock
-                                                |  #{ride.start_time}
-                                        div.ride-card-seats
-                                            span.seats-num= 1
-                                            span.seats-lbl= "seat"
-                                            div#NoResults(hidden)
-                                            i.fa-solid.fa-circle-exclamation
-                                        span No rideshares match your search.
-                                            
-                                        div#ActiveRide
-                                            //- div#ActiveDriver
-                                                //- p#ActiveDriverName Mr Bean
-                                                //- p#ActiveDriverCar
-                                                //-     span#ActiveDriverCarModel 1977 British Leyland Mini 1000
-                                                //-     span#ActiveDriverCarReg SLW 287R
-                                            p.detail-loc-label Pickup
-                                            p#ActivePickup Somewhere in 3 mins (9:00)
+                            div.ride-card-info
+                                div.ride-card-route
+                                    span.ride-from= ride.start_placeName
+                                    i.fa-solid.fa-chevron-right
+                                    span.ride-to= ride.end_placeName
+                                div.ride-card-details
+                                    span.ride-driver
+                                        i.fa-solid.fa-user
+                                        |  #{ride.userName}
+                                    span.ride-time
+                                        i.fa-regular.fa-clock
+                                        |  #{ride.start_time || "9:00"}
+                            div.ride-card-seats
+                                span.seats-num= ride.seats_available || 2
+                                span.seats-lbl= (ride.seats_available || 2) === 1 ? "seat" : "seats"
+
+                    div#NoResults(hidden)
+                        i.fa-solid.fa-circle-exclamation
+                        span No rideshares match your search.
+                        
+                div#ActiveRide
+                    //- div#ActiveDriver
+                        //- p#ActiveDriverName Mr Bean
+                        //- p#ActiveDriverCar
+                        //-     span#ActiveDriverCarModel 1977 British Leyland Mini 1000
+                        //-     span#ActiveDriverCarReg SLW 287R
+                    p.detail-loc-label Pickup
+                    p#ActivePickup Somewhere in 3 mins (9:00)
 
             div#RideDetail(style="display:none")
                 div#RideDetailBar
-                button#BackToListBtn(title="Back to rideshares")
-                i.fa-solid.fa-arrow-left
+                    button#BackToListBtn(title="Back to rideshares")
+                        i.fa-solid.fa-arrow-left
 
                 div#RideDetailInfo
                     div.ride-detail-heading
@@ -66,18 +65,18 @@ block content
                         span#DetailDriverCar
                     div.detail-loc-row
                         div.detail-loc-text
-                            span.detail-loc-label From 
+                            span.detail-loc-label From
                             span#DetailFrom
                         div.detail-loc-text
-                            span.detail-loc-label To 
-                             span#DetailTo
-                        div.detail-meta-row
-                            span.detail-meta-item
-                                i.fa-regular.fa-clock
-                                span#DetailTime
-                            span.detail-meta-item
-                                i.fa-solid.fa-users
-                                span#DetailSeats
+                            span.detail-loc-label To
+                            span#DetailTo
+                    div.detail-meta-row
+                        span.detail-meta-item
+                            i.fa-regular.fa-clock
+                            span#DetailTime
+                        span.detail-meta-item
+                            i.fa-solid.fa-users
+                            span#DetailSeats
 
                 div#RideStops
                     div#StopList.stop-list
@@ -90,7 +89,6 @@ block content
                     button#RegisterBtn
                         i.fa-solid.fa-user-plus
                         span  JOIN
-   
-       
+
     script.
         const RIDESHARES = !{JSON.stringify(rideshares)};
