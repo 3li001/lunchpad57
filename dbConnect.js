@@ -341,17 +341,20 @@ async addCommute(driverID, startID, endID){
         )
     })
 }
-async getDriverRoutes(userID){
-return await new Promise((resolve, reject)=>{
-    this.db.all("SELECT dc.startID, dc.endID, placeStart.placeName AS startPlace, placeEnd.placeName AS endPlace FROM users u JOIN drivers d ON u.userID = d.userID JOIN drivercommutes dc ON d.driverID = dc.driverID JOIN VerifiedPlaces placeStart ON dc.startID = placeStart.placeID JOIN VerifiedPlaces placeEnd ON dc.endID = placeEnd.placeID WHERE u.userID = ?",[userID],
-        (err,row)=>{
-            if(err) return reject(err);
-            resolve(row);
-        }
+// async getDriverRoutes(userID){
+//     return await new Promise((resolve, reject)=>{
 
-    );
-});
-}
+
+// return await new Promise((resolve, reject)=>{
+//     this.db.all("SELECT dc.startID, dc.endID, placeStart.placeName AS startPlace, placeEnd.placeName AS endPlace FROM users u JOIN drivers d ON u.userID = d.userID JOIN drivercommutes dc ON d.driverID = dc.driverID JOIN VerifiedPlaces placeStart ON dc.startID = placeStart.placeID JOIN VerifiedPlaces placeEnd ON dc.endID = placeEnd.placeID WHERE u.userID = ?",[userID],
+//         (err,row)=>{
+//             if(err) return reject(err);
+//             resolve(row);
+//         }
+
+//     );
+// });
+// }
 
 async getRideshares() {
   return await new Promise((resolve, reject) => {
@@ -363,6 +366,17 @@ async getRideshares() {
     );
   });
 }
+
+async getDriverRideshares(userID) {
+    return await new Promise((resolve, reject) => {
+        this.db.all("SELECT userName, d.driverID, d.startID, d.endID, sp.placeID   AS start_placeID, sp.placeName AS start_placeName, sp.latitude  AS start_latitude, sp.longitude AS start_longitude, ep.placeID   AS end_placeID, ep.placeName AS end_placeName, ep.latitude  AS end_latitude, ep.longitude AS end_longitude FROM users join Drivers ON users.userID=Drivers.userID JOIN DriverCommutes d on Drivers.driverID=d.driverID JOIN VerifiedPlaces sp ON d.startId = sp.placeID JOIN VerifiedPlaces ep ON d.endId = ep.placeID WHERE users.userID=?",
+            [userID], (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
+        });
+    });
+}
+
 async checkUserExists(username, email) {
   console.log(username, email);
 
