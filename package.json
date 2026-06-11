@@ -31,6 +31,12 @@
     "@lib": "lib",
     "@models": "models"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^@lib/(.*)$": "<rootDir>/lib/$1",
+      "^@models/(.*)$": "<rootDir>/models/$1"
+    }
+  },
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^7.2.2"
